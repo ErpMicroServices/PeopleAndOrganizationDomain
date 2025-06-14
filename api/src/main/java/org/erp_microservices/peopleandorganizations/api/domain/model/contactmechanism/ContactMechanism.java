@@ -14,18 +14,18 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public abstract class ContactMechanism {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
     private UUID id;
-    
+
     @Column(name = "contact_mechanism_type", insertable = false, updatable = false)
     private String contactMechanismType;
-    
+
     @Column(name = "comment", columnDefinition = "TEXT")
     private String comment;
-    
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -33,7 +33,7 @@ public abstract class ContactMechanism {
         ContactMechanism that = (ContactMechanism) o;
         return java.util.Objects.equals(id, that.id);
     }
-    
+
     @Override
     public int hashCode() {
         return java.util.Objects.hash(id);

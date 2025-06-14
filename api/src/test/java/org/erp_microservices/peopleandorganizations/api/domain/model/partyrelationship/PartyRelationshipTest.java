@@ -43,7 +43,7 @@ class PartyRelationshipTest {
     void shouldCreatePartyRelationshipWithRequiredFields() {
         // Given
         LocalDate fromDate = LocalDate.now();
-        
+
         // When
         PartyRelationship relationship = PartyRelationship.builder()
                 .fromParty(personParty)
@@ -51,7 +51,7 @@ class PartyRelationshipTest {
                 .relationshipType(relationshipType)
                 .fromDate(fromDate)
                 .build();
-        
+
         // Then
         assertThat(relationship.getFromParty()).isEqualTo(personParty);
         assertThat(relationship.getToParty()).isEqualTo(organizationParty);
@@ -67,7 +67,7 @@ class PartyRelationshipTest {
         LocalDate fromDate = LocalDate.now();
         LocalDate thruDate = fromDate.plusYears(2);
         String comment = "Full-time employment";
-        
+
         // When
         PartyRelationship relationship = PartyRelationship.builder()
                 .fromParty(personParty)
@@ -77,7 +77,7 @@ class PartyRelationshipTest {
                 .thruDate(thruDate)
                 .comment(comment)
                 .build();
-        
+
         // Then
         assertThat(relationship.getFromParty()).isEqualTo(personParty);
         assertThat(relationship.getToParty()).isEqualTo(organizationParty);
@@ -93,14 +93,14 @@ class PartyRelationshipTest {
         // Given
         LocalDate yesterday = LocalDate.now().minusDays(1);
         LocalDate tomorrow = LocalDate.now().plusDays(1);
-        
+
         PartyRelationship activeRelationship = PartyRelationship.builder()
                 .fromParty(personParty)
                 .toParty(organizationParty)
                 .relationshipType(relationshipType)
                 .fromDate(yesterday)
                 .build();
-        
+
         PartyRelationship expiredRelationship = PartyRelationship.builder()
                 .fromParty(personParty)
                 .toParty(organizationParty)
@@ -108,14 +108,14 @@ class PartyRelationshipTest {
                 .fromDate(yesterday)
                 .thruDate(yesterday)
                 .build();
-        
+
         PartyRelationship futureRelationship = PartyRelationship.builder()
                 .fromParty(personParty)
                 .toParty(organizationParty)
                 .relationshipType(relationshipType)
                 .fromDate(tomorrow)
                 .build();
-        
+
         // Then
         assertThat(activeRelationship.isActive()).isTrue();
         assertThat(expiredRelationship.isActive()).isFalse();
@@ -131,7 +131,7 @@ class PartyRelationshipTest {
         LocalDate testDate = LocalDate.of(2024, 6, 15);
         LocalDate beforeStart = LocalDate.of(2023, 12, 31);
         LocalDate afterEnd = LocalDate.of(2025, 1, 1);
-        
+
         PartyRelationship relationship = PartyRelationship.builder()
                 .fromParty(personParty)
                 .toParty(organizationParty)
@@ -139,7 +139,7 @@ class PartyRelationshipTest {
                 .fromDate(startDate)
                 .thruDate(endDate)
                 .build();
-        
+
         // Then
         assertThat(relationship.isActiveOn(testDate)).isTrue();
         assertThat(relationship.isActiveOn(startDate)).isTrue();
@@ -154,7 +154,7 @@ class PartyRelationshipTest {
         // Given
         LocalDate startDate = LocalDate.of(2024, 1, 1);
         LocalDate futureDate = LocalDate.of(2030, 12, 31);
-        
+
         PartyRelationship relationship = PartyRelationship.builder()
                 .fromParty(personParty)
                 .toParty(organizationParty)
@@ -162,7 +162,7 @@ class PartyRelationshipTest {
                 .fromDate(startDate)
                 .thruDate(null)
                 .build();
-        
+
         // Then
         assertThat(relationship.isActiveOn(futureDate)).isTrue();
         assertThat(relationship.isActive()).isTrue();
@@ -174,17 +174,17 @@ class PartyRelationshipTest {
         // Given
         LocalDate startDate = LocalDate.now().minusMonths(6);
         LocalDate terminationDate = LocalDate.now();
-        
+
         PartyRelationship relationship = PartyRelationship.builder()
                 .fromParty(personParty)
                 .toParty(organizationParty)
                 .relationshipType(relationshipType)
                 .fromDate(startDate)
                 .build();
-        
+
         // When
         relationship.setThruDate(terminationDate);
-        
+
         // Then
         assertThat(relationship.getThruDate()).isEqualTo(terminationDate);
         assertThat(relationship.isActive()).isFalse();
@@ -201,10 +201,10 @@ class PartyRelationshipTest {
                 .fromDate(LocalDate.now())
                 .comment("Initial comment")
                 .build();
-        
+
         // When
         relationship.setComment("Updated comment with more details");
-        
+
         // Then
         assertThat(relationship.getComment()).isEqualTo("Updated comment with more details");
     }
@@ -220,7 +220,7 @@ class PartyRelationshipTest {
                 .fromDate(LocalDate.now())
                 .build();
         relationship1.setId(UUID.randomUUID());
-        
+
         PartyRelationship relationship2 = PartyRelationship.builder()
                 .fromParty(organizationParty)
                 .toParty(personParty)
@@ -228,7 +228,7 @@ class PartyRelationshipTest {
                 .fromDate(LocalDate.now())
                 .build();
         relationship2.setId(relationship1.getId());
-        
+
         PartyRelationship relationship3 = PartyRelationship.builder()
                 .fromParty(personParty)
                 .toParty(organizationParty)
@@ -236,7 +236,7 @@ class PartyRelationshipTest {
                 .fromDate(LocalDate.now())
                 .build();
         relationship3.setId(UUID.randomUUID());
-        
+
         // Then
         assertThat(relationship1).isEqualTo(relationship2);
         assertThat(relationship1).isNotEqualTo(relationship3);
@@ -253,7 +253,7 @@ class PartyRelationshipTest {
                 .fromDate(LocalDate.now())
                 .comment(null)
                 .build();
-        
+
         // Then
         assertThat(relationship.getComment()).isNull();
     }

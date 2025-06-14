@@ -1,17 +1,17 @@
 spring:
   application:
     name: people-and-organizations-api
-  
+
   # Make Spring Cloud Config optional
   config:
     import: optional:configserver:http://localhost:8888
-  
+
   datasource:
     url: jdbc:postgresql://localhost:5432/people_and_organizations
     username: postgres
-    password: postgres
+    password: postgres  # pragma: allowlist secret
     driver-class-name: org.postgresql.Driver
-    
+
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
@@ -23,21 +23,21 @@ spring:
         jdbc:
           time_zone: UTC
     open-in-view: false
-    
+
   graphql:
     graphiql:
       enabled: true
     path: /graphql
     websocket:
       path: /subscriptions
-      
+
   security:
     oauth2:
       client:
         registration:
           cognito:
             client-id: ${COGNITO_CLIENT_ID:your-client-id}
-            client-secret: ${COGNITO_CLIENT_SECRET:your-client-secret}
+            client-secret: ${COGNITO_CLIENT_SECRET:your-client-secret}  # pragma: allowlist secret
             scope: openid,profile,email
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
@@ -50,7 +50,7 @@ spring:
 
 server:
   port: 8080
-  
+
 logging:
   level:
     org.hibernate.SQL: DEBUG

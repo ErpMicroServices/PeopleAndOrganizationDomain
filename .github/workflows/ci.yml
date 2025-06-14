@@ -17,13 +17,13 @@ jobs:
   java-ci:
     name: Java CI Build & Test
     runs-on: ubuntu-latest
-    
+
     services:
       postgres:
         image: postgres:16-alpine
         env:
           POSTGRES_USER: test
-          POSTGRES_PASSWORD: test
+          POSTGRES_PASSWORD: test  # pragma: allowlist secret
           POSTGRES_DB: testdb
         options: >-
           --health-cmd pg_isready
@@ -62,7 +62,7 @@ jobs:
           SPRING_PROFILES_ACTIVE: test
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/testdb
           SPRING_DATASOURCE_USERNAME: test
-          SPRING_DATASOURCE_PASSWORD: test
+          SPRING_DATASOURCE_PASSWORD: test  # pragma: allowlist secret
 
       - name: Generate test report
         run: ./gradlew jacocoTestReport --no-daemon
@@ -181,7 +181,7 @@ jobs:
   ui-components:
     name: UI Components Test
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -224,13 +224,13 @@ jobs:
     name: BDD Integration Tests
     runs-on: ubuntu-latest
     if: false  # Disabled until BDD framework is implemented
-    
+
     services:
       postgres:
         image: postgres:16-alpine
         env:
           POSTGRES_USER: test
-          POSTGRES_PASSWORD: test
+          POSTGRES_PASSWORD: test  # pragma: allowlist secret
           POSTGRES_DB: testdb
         options: >-
           --health-cmd pg_isready
@@ -259,7 +259,7 @@ jobs:
           SPRING_PROFILES_ACTIVE: test
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/testdb
           SPRING_DATASOURCE_USERNAME: test
-          SPRING_DATASOURCE_PASSWORD: test
+          SPRING_DATASOURCE_PASSWORD: test  # pragma: allowlist secret
 
   # Job 6: Docker build and validation
   docker-build:

@@ -14,38 +14,38 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 public class Person extends Party {
-    
+
     public Person() {
         super();
         setPartyType("PERSON");
     }
-    
+
     @Column(name = "first_name")
     private String firstName;
-    
+
     @Column(name = "middle_name")
     private String middleName;
-    
+
     @Column(name = "last_name")
     private String lastName;
-    
+
     @Column(name = "title")
     private String title;
-    
+
     @Column(name = "suffix")
     private String suffix;
-    
+
     @Column(name = "birth_date")
     private LocalDate birthDate;
-    
+
     @Column(name = "gender")
     @Enumerated(EnumType.STRING)
     private GenderType genderType;
-    
+
     @Builder
-    public Person(UUID id, PartyType partyTypeRef, String partyType, String comment, 
-                  List<PartyRole> roles, List<PartyName> names, 
-                  List<PartyIdentification> identifications, 
+    public Person(UUID id, PartyType partyTypeRef, String partyType, String comment,
+                  List<PartyRole> roles, List<PartyName> names,
+                  List<PartyIdentification> identifications,
                   List<PartyClassification> classifications,
                   String firstName, String middleName, String lastName,
                   String title, String suffix, LocalDate birthDate, GenderType genderType) {
@@ -58,7 +58,7 @@ public class Person extends Party {
         this.birthDate = birthDate;
         this.genderType = genderType;
     }
-    
+
     public String getFullName() {
         StringBuilder name = new StringBuilder();
         if (title != null) {
@@ -78,7 +78,7 @@ public class Person extends Party {
         }
         return name.toString().trim();
     }
-    
+
     public Integer getAge() {
         if (birthDate == null) {
             return null;

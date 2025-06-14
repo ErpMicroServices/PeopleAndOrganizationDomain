@@ -17,13 +17,13 @@ class PersonTest {
         // Given
         String firstName = "John";
         String lastName = "Doe";
-        
+
         // When
         Person person = Person.builder()
                 .firstName(firstName)
                 .lastName(lastName)
                 .build();
-        
+
         // Then
         assertThat(person.getFirstName()).isEqualTo(firstName);
         assertThat(person.getLastName()).isEqualTo(lastName);
@@ -39,7 +39,7 @@ class PersonTest {
         String middleName = "Michael";
         LocalDate birthDate = LocalDate.of(1990, 1, 15);
         GenderType genderType = GenderType.MALE;
-        
+
         // When
         Person person = Person.builder()
                 .firstName(firstName)
@@ -48,7 +48,7 @@ class PersonTest {
                 .birthDate(birthDate)
                 .genderType(genderType)
                 .build();
-        
+
         // Then
         assertThat(person.getFirstName()).isEqualTo(firstName);
         assertThat(person.getLastName()).isEqualTo(lastName);
@@ -65,12 +65,12 @@ class PersonTest {
                 .firstName("John")
                 .lastName("Doe")
                 .build();
-        
+
         // When
         person.setFirstName("Jane");
         person.setLastName("Smith");
         person.setMiddleName("Ann");
-        
+
         // Then
         assertThat(person.getFirstName()).isEqualTo("Jane");
         assertThat(person.getLastName()).isEqualTo("Smith");
@@ -85,7 +85,7 @@ class PersonTest {
                 .firstName("John")
                 .lastName("Doe")
                 .build();
-        
+
         // Then
         assertThat(person.getPartyType()).isEqualTo("PERSON");
         assertThat(person).isInstanceOf(Party.class);
@@ -100,7 +100,7 @@ class PersonTest {
                 .lastName("Doe")
                 .middleName(null)
                 .build();
-        
+
         // Then
         assertThat(person.getMiddleName()).isNull();
     }
@@ -114,7 +114,7 @@ class PersonTest {
                 .lastName("Doe")
                 .birthDate(null)
                 .build();
-        
+
         // Then
         assertThat(person.getBirthDate()).isNull();
     }
@@ -128,7 +128,7 @@ class PersonTest {
                 .lastName("Doe")
                 .genderType(null)
                 .build();
-        
+
         // Then
         assertThat(person.getGenderType()).isNull();
     }
@@ -142,19 +142,19 @@ class PersonTest {
                 .lastName("Doe")
                 .build();
         person1.setId(UUID.randomUUID());
-        
+
         Person person2 = Person.builder()
                 .firstName("Jane")
                 .lastName("Smith")
                 .build();
         person2.setId(person1.getId());
-        
+
         Person person3 = Person.builder()
                 .firstName("John")
                 .lastName("Doe")
                 .build();
         person3.setId(UUID.randomUUID());
-        
+
         // Then
         assertThat(person1).isEqualTo(person2);
         assertThat(person1).isNotEqualTo(person3);

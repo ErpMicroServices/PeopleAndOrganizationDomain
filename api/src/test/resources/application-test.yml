@@ -1,25 +1,25 @@
 spring:
   application:
     name: people-and-organizations-api-test
-  
+
   # Disable Spring Cloud Config for tests
   cloud:
     config:
       enabled: false
     vault:
       enabled: false
-  
+
   # Optional config import to prevent failures
   config:
     import: "optional:configserver:"
-  
+
   # Test database configuration - uses PostgreSQL via Testcontainers
   datasource:
     url: jdbc:tc:postgresql:15-alpine:///testdb
     username: test
-    password: test
+    password: test  # pragma: allowlist secret
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
-    
+
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
@@ -31,12 +31,12 @@ spring:
         jdbc:
           time_zone: UTC
     open-in-view: false
-    
+
   graphql:
     graphiql:
       enabled: false
     path: /graphql
-    
+
   # Disable security for tests
   security:
     oauth2:
@@ -44,7 +44,7 @@ spring:
         registration:
           cognito:
             client-id: test-client-id
-            client-secret: test-client-secret
+            client-secret: test-client-secret  # pragma: allowlist secret
             scope: openid,profile,email
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"

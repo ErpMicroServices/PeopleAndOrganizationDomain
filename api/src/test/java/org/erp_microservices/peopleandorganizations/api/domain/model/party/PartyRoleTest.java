@@ -33,14 +33,14 @@ class PartyRoleTest {
     void shouldCreatePartyRoleWithRequiredFields() {
         // Given
         LocalDate fromDate = LocalDate.now();
-        
+
         // When
         PartyRole partyRole = PartyRole.builder()
                 .party(party)
                 .roleType(roleType)
                 .fromDate(fromDate)
                 .build();
-        
+
         // Then
         assertThat(partyRole.getParty()).isEqualTo(party);
         assertThat(partyRole.getRoleType()).isEqualTo(roleType);
@@ -54,7 +54,7 @@ class PartyRoleTest {
         // Given
         LocalDate fromDate = LocalDate.now();
         LocalDate thruDate = fromDate.plusMonths(6);
-        
+
         // When
         PartyRole partyRole = PartyRole.builder()
                 .party(party)
@@ -62,7 +62,7 @@ class PartyRoleTest {
                 .fromDate(fromDate)
                 .thruDate(thruDate)
                 .build();
-        
+
         // Then
         assertThat(partyRole.getParty()).isEqualTo(party);
         assertThat(partyRole.getRoleType()).isEqualTo(roleType);
@@ -76,26 +76,26 @@ class PartyRoleTest {
         // Given
         LocalDate yesterday = LocalDate.now().minusDays(1);
         LocalDate tomorrow = LocalDate.now().plusDays(1);
-        
+
         PartyRole activeRole = PartyRole.builder()
                 .party(party)
                 .roleType(roleType)
                 .fromDate(yesterday)
                 .build();
-        
+
         PartyRole expiredRole = PartyRole.builder()
                 .party(party)
                 .roleType(roleType)
                 .fromDate(yesterday)
                 .thruDate(yesterday)
                 .build();
-        
+
         PartyRole futureRole = PartyRole.builder()
                 .party(party)
                 .roleType(roleType)
                 .fromDate(tomorrow)
                 .build();
-        
+
         // Then
         assertThat(activeRole.isActive()).isTrue();
         assertThat(expiredRole.isActive()).isFalse();
@@ -111,14 +111,14 @@ class PartyRoleTest {
         LocalDate testDate = LocalDate.of(2024, 3, 15);
         LocalDate beforeStart = LocalDate.of(2023, 12, 31);
         LocalDate afterEnd = LocalDate.of(2024, 7, 1);
-        
+
         PartyRole partyRole = PartyRole.builder()
                 .party(party)
                 .roleType(roleType)
                 .fromDate(startDate)
                 .thruDate(endDate)
                 .build();
-        
+
         // Then
         assertThat(partyRole.isActiveOn(testDate)).isTrue();
         assertThat(partyRole.isActiveOn(startDate)).isTrue();
@@ -133,14 +133,14 @@ class PartyRoleTest {
         // Given
         LocalDate startDate = LocalDate.of(2024, 1, 1);
         LocalDate futureDate = LocalDate.of(2025, 12, 31);
-        
+
         PartyRole partyRole = PartyRole.builder()
                 .party(party)
                 .roleType(roleType)
                 .fromDate(startDate)
                 .thruDate(null)
                 .build();
-        
+
         // Then
         assertThat(partyRole.isActiveOn(futureDate)).isTrue();
         assertThat(partyRole.isActive()).isTrue();
@@ -152,16 +152,16 @@ class PartyRoleTest {
         // Given
         LocalDate startDate = LocalDate.now().minusDays(30);
         LocalDate terminationDate = LocalDate.now();
-        
+
         PartyRole partyRole = PartyRole.builder()
                 .party(party)
                 .roleType(roleType)
                 .fromDate(startDate)
                 .build();
-        
+
         // When
         partyRole.setThruDate(terminationDate);
-        
+
         // Then
         assertThat(partyRole.getThruDate()).isEqualTo(terminationDate);
         assertThat(partyRole.isActive()).isFalse();
@@ -177,21 +177,21 @@ class PartyRoleTest {
                 .fromDate(LocalDate.now())
                 .build();
         role1.setId(UUID.randomUUID());
-        
+
         PartyRole role2 = PartyRole.builder()
                 .party(party)
                 .roleType(roleType)
                 .fromDate(LocalDate.now())
                 .build();
         role2.setId(role1.getId());
-        
+
         PartyRole role3 = PartyRole.builder()
                 .party(party)
                 .roleType(roleType)
                 .fromDate(LocalDate.now())
                 .build();
         role3.setId(UUID.randomUUID());
-        
+
         // Then
         assertThat(role1).isEqualTo(role2);
         assertThat(role1).isNotEqualTo(role3);

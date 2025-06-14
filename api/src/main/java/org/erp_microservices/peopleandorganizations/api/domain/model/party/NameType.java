@@ -14,31 +14,31 @@ import java.util.UUID;
 @Builder
 @EqualsAndHashCode
 public class NameType {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
     private UUID id;
-    
+
     @Column(name = "description", nullable = false, unique = true)
     private String description;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private NameType parent;
-    
+
     public boolean isLegalName() {
-        return "Legal Name".equals(description) || 
+        return "Legal Name".equals(description) ||
                (parent != null && parent.isLegalName());
     }
-    
+
     public boolean isTradeStyleName() {
-        return "Trade Style Name".equals(description) || 
+        return "Trade Style Name".equals(description) ||
                (parent != null && parent.isTradeStyleName());
     }
-    
+
     public boolean isNickname() {
-        return "Nickname".equals(description) || 
+        return "Nickname".equals(description) ||
                (parent != null && parent.isNickname());
     }
 }

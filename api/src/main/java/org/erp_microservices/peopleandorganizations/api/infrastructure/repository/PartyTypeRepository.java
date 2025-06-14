@@ -9,6 +9,6 @@ import java.util.UUID;
 
 @Repository
 public interface PartyTypeRepository extends JpaRepository<PartyType, UUID> {
-    
+
     Optional<PartyType> findByDescription(String description);
 }

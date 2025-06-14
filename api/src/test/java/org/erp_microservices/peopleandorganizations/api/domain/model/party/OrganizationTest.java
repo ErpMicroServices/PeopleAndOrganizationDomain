@@ -13,12 +13,12 @@ class OrganizationTest {
     void shouldCreateOrganizationWithRequiredFields() {
         // Given
         String name = "Acme Corporation";
-        
+
         // When
         Organization organization = Organization.builder()
                 .name(name)
                 .build();
-        
+
         // Then
         assertThat(organization.getName()).isEqualTo(name);
         assertThat(organization.getPartyType()).isEqualTo("ORGANIZATION");
@@ -32,7 +32,7 @@ class OrganizationTest {
         String tradingName = "Acme Corp";
         String registrationNumber = "REG123456";
         String taxIdNumber = "TAX987654";
-        
+
         // When
         Organization organization = Organization.builder()
                 .name(name)
@@ -40,7 +40,7 @@ class OrganizationTest {
                 .registrationNumber(registrationNumber)
                 .taxIdNumber(taxIdNumber)
                 .build();
-        
+
         // Then
         assertThat(organization.getName()).isEqualTo(name);
         assertThat(organization.getTradingName()).isEqualTo(tradingName);
@@ -55,13 +55,13 @@ class OrganizationTest {
         Organization organization = Organization.builder()
                 .name("Acme Corporation")
                 .build();
-        
+
         // When
         organization.setName("New Corp");
         organization.setTradingName("New Trading Name");
         organization.setRegistrationNumber("NEW123");
         organization.setTaxIdNumber("NEWTAX456");
-        
+
         // Then
         assertThat(organization.getName()).isEqualTo("New Corp");
         assertThat(organization.getTradingName()).isEqualTo("New Trading Name");
@@ -76,7 +76,7 @@ class OrganizationTest {
         Organization organization = Organization.builder()
                 .name("Acme Corporation")
                 .build();
-        
+
         // Then
         assertThat(organization.getPartyType()).isEqualTo("ORGANIZATION");
         assertThat(organization).isInstanceOf(Party.class);
@@ -90,7 +90,7 @@ class OrganizationTest {
                 .name("Acme Corporation")
                 .tradingName(null)
                 .build();
-        
+
         // Then
         assertThat(organization.getTradingName()).isNull();
     }
@@ -103,7 +103,7 @@ class OrganizationTest {
                 .name("Acme Corporation")
                 .registrationNumber(null)
                 .build();
-        
+
         // Then
         assertThat(organization.getRegistrationNumber()).isNull();
     }
@@ -116,7 +116,7 @@ class OrganizationTest {
                 .name("Acme Corporation")
                 .taxIdNumber(null)
                 .build();
-        
+
         // Then
         assertThat(organization.getTaxIdNumber()).isNull();
     }
@@ -129,17 +129,17 @@ class OrganizationTest {
                 .name("Acme Corporation")
                 .build();
         org1.setId(UUID.randomUUID());
-        
+
         Organization org2 = Organization.builder()
                 .name("Different Corp")
                 .build();
         org2.setId(org1.getId());
-        
+
         Organization org3 = Organization.builder()
                 .name("Acme Corporation")
                 .build();
         org3.setId(UUID.randomUUID());
-        
+
         // Then
         assertThat(org1).isEqualTo(org2);
         assertThat(org1).isNotEqualTo(org3);

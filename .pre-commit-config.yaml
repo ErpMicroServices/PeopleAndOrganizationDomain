@@ -1,0 +1,104 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+default_language_version:
+  python: python3
+repos:
+  # General file checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+        args: ['--maxkb=1000']
+      - id: check-merge-conflict
+      - id: check-case-conflict
+      - id: check-json
+      - id: check-xml
+      - id: mixed-line-ending
+        args: ['--fix=lf']
+
+  # Secrets detection
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        args: ['--baseline', '.secrets.baseline']
+        exclude: package-lock\.json|yarn\.lock|gradle\.lockfile
+
+  # Java/Gradle checks - Only compile check on every commit
+  - repo: local
+    hooks:
+      # Compile Java code (fast, runs on every commit)
+      - id: gradle-compile
+        name: Gradle Compile
+        entry: bash -c 'if command -v /usr/libexec/java_home >/dev/null 2>&1; then export JAVA_HOME=$(/usr/libexec/java_home -v 21); fi && ./gradlew compileJava compileTestJava --no-daemon'
+        language: system
+        files: \.java$
+        pass_filenames: false
+
+  # JavaScript/React checks
+  - repo: local
+    hooks:
+      # ESLint
+      - id: eslint
+        name: ESLint
+        entry: bash -c 'cd ui-components && npm run lint'
+        language: system
+        files: \.(js|jsx|ts|tsx)$
+        pass_filenames: false
+
+  # YAML validation
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.35.1
+    hooks:
+      - id: yamllint
+        args: ['-c', '.yamllint.yml']
+
+  # Markdown formatting (disabled temporarily - too many legacy issues)
+  # - repo: https://github.com/igorshubovych/markdownlint-cli
+  #   rev: v0.42.0
+  #   hooks:
+  #     - id: markdownlint
+  #       args: ['--fix']
+
+  # Commit message validation
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v4.0.0
+    hooks:
+      - id: commitizen
+        stages: [commit-msg]
+
+# Pre-push hooks (more expensive checks)
+  - repo: local
+    hooks:
+      # Run unit tests before push
+      - id: gradle-test-push
+        name: Gradle Unit Tests (pre-push)
+        entry: bash -c 'if command -v /usr/libexec/java_home >/dev/null 2>&1; then export JAVA_HOME=$(/usr/libexec/java_home -v 21); fi && ./gradlew test -x integrationTest --no-daemon'
+        language: system
+        files: \.java$
+        pass_filenames: false
+        stages: [pre-push]
+
+      # Run code quality checks before push
+      - id: gradle-quality-push
+        name: Gradle Code Quality (pre-push)
+        entry: bash -c 'if command -v /usr/libexec/java_home >/dev/null 2>&1; then export JAVA_HOME=$(/usr/libexec/java_home -v 21); fi && ./gradlew checkstyleMain checkstyleTest pmdMain pmdTest --no-daemon'
+        language: system
+        files: \.java$
+        pass_filenames: false
+        stages: [pre-push]
+
+# Optional: Configure specific file patterns to exclude
+exclude: |
+  (?x)^(
+    .*\.min\.js|
+    .*\.min\.css|
+    .*/migrations/.*|
+    .*/build/.*|
+    .*/target/.*|
+    .*/node_modules/.*|
+    .*/vendor/.*
+  )$

@@ -17,7 +17,7 @@ class PostalAddressTest {
         String stateProvince = "CA";
         String postalCode = "12345";
         String country = "USA";
-        
+
         // When
         PostalAddress postalAddress = PostalAddress.builder()
                 .address1(address1)
@@ -26,7 +26,7 @@ class PostalAddressTest {
                 .postalCode(postalCode)
                 .country(country)
                 .build();
-        
+
         // Then
         assertThat(postalAddress.getAddress1()).isEqualTo(address1);
         assertThat(postalAddress.getCity()).isEqualTo(city);
@@ -47,7 +47,7 @@ class PostalAddressTest {
         String postalCode = "12345";
         String postalCodeExtension = "6789";
         String country = "USA";
-        
+
         // When
         PostalAddress postalAddress = PostalAddress.builder()
                 .address1(address1)
@@ -58,7 +58,7 @@ class PostalAddressTest {
                 .postalCodeExtension(postalCodeExtension)
                 .country(country)
                 .build();
-        
+
         // Then
         assertThat(postalAddress.getAddress1()).isEqualTo(address1);
         assertThat(postalAddress.getAddress2()).isEqualTo(address2);
@@ -80,14 +80,14 @@ class PostalAddressTest {
                 .postalCode("12345")
                 .country("USA")
                 .build();
-        
+
         // When
         postalAddress.setAddress1("456 New Street");
         postalAddress.setAddress2("Apt 2B");
         postalAddress.setCity("Newtown");
         postalAddress.setStateProvince("NY");
         postalAddress.setPostalCode("54321");
-        
+
         // Then
         assertThat(postalAddress.getAddress1()).isEqualTo("456 New Street");
         assertThat(postalAddress.getAddress2()).isEqualTo("Apt 2B");
@@ -107,7 +107,7 @@ class PostalAddressTest {
                 .postalCode("12345")
                 .country("USA")
                 .build();
-        
+
         // Then
         assertThat(postalAddress.getContactMechanismType()).isEqualTo("POSTAL_ADDRESS");
         assertThat(postalAddress).isInstanceOf(ContactMechanism.class);
@@ -125,7 +125,7 @@ class PostalAddressTest {
                 .postalCode("12345")
                 .country("USA")
                 .build();
-        
+
         // Then
         assertThat(postalAddress.getAddress2()).isNull();
     }
@@ -142,7 +142,7 @@ class PostalAddressTest {
                 .postalCodeExtension(null)
                 .country("USA")
                 .build();
-        
+
         // Then
         assertThat(postalAddress.getPostalCodeExtension()).isNull();
     }
@@ -160,10 +160,10 @@ class PostalAddressTest {
                 .postalCodeExtension("6789")
                 .country("USA")
                 .build();
-        
+
         // When
         String expectedFormat = "123 Main Street, Suite 100, Anytown, CA 12345-6789, USA";
-        
+
         // Then
         // Note: This assumes a getFormattedAddress() method would be implemented
         // For now, we just verify all components are accessible
@@ -188,7 +188,7 @@ class PostalAddressTest {
                 .country("USA")
                 .build();
         address1.setId(UUID.randomUUID());
-        
+
         PostalAddress address2 = PostalAddress.builder()
                 .address1("456 Other Street")
                 .city("Other City")
@@ -197,7 +197,7 @@ class PostalAddressTest {
                 .country("USA")
                 .build();
         address2.setId(address1.getId());
-        
+
         PostalAddress address3 = PostalAddress.builder()
                 .address1("123 Main Street")
                 .city("Anytown")
@@ -206,7 +206,7 @@ class PostalAddressTest {
                 .country("USA")
                 .build();
         address3.setId(UUID.randomUUID());
-        
+
         // Then
         assertThat(address1).isEqualTo(address2);
         assertThat(address1).isNotEqualTo(address3);

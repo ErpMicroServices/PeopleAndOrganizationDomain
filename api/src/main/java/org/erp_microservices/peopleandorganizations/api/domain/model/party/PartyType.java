@@ -13,36 +13,36 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class PartyType {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
     private UUID id;
-    
+
     @Column(name = "description", nullable = false, unique = true)
     private String description;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private PartyType parent;
-    
+
     public boolean isPerson() {
-        return "Person".equals(description) || 
+        return "Person".equals(description) ||
                (parent != null && parent.isPerson());
     }
-    
+
     public boolean isOrganization() {
-        return "Organization".equals(description) || 
+        return "Organization".equals(description) ||
                (parent != null && parent.isOrganization());
     }
-    
+
     public boolean isLegalOrganization() {
-        return "Legal Organization".equals(description) || 
+        return "Legal Organization".equals(description) ||
                (parent != null && parent.isLegalOrganization());
     }
-    
+
     public boolean isInformalOrganization() {
-        return "Informal Organization".equals(description) || 
+        return "Informal Organization".equals(description) ||
                (parent != null && parent.isInformalOrganization());
     }
 }

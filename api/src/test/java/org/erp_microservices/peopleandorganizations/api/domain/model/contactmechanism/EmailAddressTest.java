@@ -13,12 +13,12 @@ class EmailAddressTest {
     void shouldCreateEmailAddressWithEmail() {
         // Given
         String email = "john.doe@example.com";
-        
+
         // When
         EmailAddress emailAddress = EmailAddress.builder()
                 .emailAddress(email)
                 .build();
-        
+
         // Then
         assertThat(emailAddress.getEmailAddress()).isEqualTo(email);
         assertThat(emailAddress.getContactMechanismType()).isEqualTo("EMAIL");
@@ -31,10 +31,10 @@ class EmailAddressTest {
         EmailAddress emailAddress = EmailAddress.builder()
                 .emailAddress("old@example.com")
                 .build();
-        
+
         // When
         emailAddress.setEmailAddress("new@example.com");
-        
+
         // Then
         assertThat(emailAddress.getEmailAddress()).isEqualTo("new@example.com");
     }
@@ -46,7 +46,7 @@ class EmailAddressTest {
         EmailAddress emailAddress = EmailAddress.builder()
                 .emailAddress("test@example.com")
                 .build();
-        
+
         // Then
         assertThat(emailAddress.getContactMechanismType()).isEqualTo("EMAIL");
         assertThat(emailAddress).isInstanceOf(ContactMechanism.class);
@@ -59,12 +59,12 @@ class EmailAddressTest {
         String simpleEmail = "user@domain.com";
         String complexEmail = "user.name+tag@sub.domain.co.uk";
         String numericEmail = "user123@domain456.com";
-        
+
         // When
         EmailAddress email1 = EmailAddress.builder().emailAddress(simpleEmail).build();
         EmailAddress email2 = EmailAddress.builder().emailAddress(complexEmail).build();
         EmailAddress email3 = EmailAddress.builder().emailAddress(numericEmail).build();
-        
+
         // Then
         assertThat(email1.getEmailAddress()).isEqualTo(simpleEmail);
         assertThat(email2.getEmailAddress()).isEqualTo(complexEmail);
@@ -79,17 +79,17 @@ class EmailAddressTest {
                 .emailAddress("test1@example.com")
                 .build();
         email1.setId(UUID.randomUUID());
-        
+
         EmailAddress email2 = EmailAddress.builder()
                 .emailAddress("test2@example.com")
                 .build();
         email2.setId(email1.getId());
-        
+
         EmailAddress email3 = EmailAddress.builder()
                 .emailAddress("test1@example.com")
                 .build();
         email3.setId(UUID.randomUUID());
-        
+
         // Then
         assertThat(email1).isEqualTo(email2);
         assertThat(email1).isNotEqualTo(email3);

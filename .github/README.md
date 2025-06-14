@@ -19,12 +19,14 @@ Our CI/CD strategy implements a comprehensive quality-first approach with the fo
 **Purpose**: Validates pull requests and main branch pushes with comprehensive quality checks.
 
 **Triggered by**:
+
 - Pull requests to `main` or `develop` branches
 - Direct pushes to `main` or `develop` branches
 
 **Jobs**:
 
 #### `java-ci` - Core Build & Test
+
 - Sets up Java 21 with PostgreSQL 16 service
 - Runs unit tests (excluding integration tests)
 - Runs integration tests with @Tag("integration")
@@ -32,34 +34,40 @@ Our CI/CD strategy implements a comprehensive quality-first approach with the fo
 - Uploads test results and coverage to Codecov
 
 #### `code-quality` - Static Analysis
+
 - Runs Checkstyle for code style compliance
 - Executes PMD for code quality analysis
 - Performs SpotBugs analysis with FindSecBugs security rules
 - Uploads quality reports as artifacts
 
 #### `security-scan` - Security Analysis
+
 - OWASP Dependency Check for known vulnerabilities
 - Trivy filesystem scanning for security issues
 - Uploads SARIF reports to GitHub Security tab
 - Fails build on high-severity vulnerabilities
 
 #### `ui-components` - Frontend Testing
+
 - Node.js 18 setup with npm caching
 - ESLint for code style
 - Jest/Vitest for component testing
 - Production build validation
 
 #### `docker-build` - Container Validation
+
 - Multi-platform Docker builds (linux/amd64, linux/arm64)
 - Container image security scanning with Trivy
 - Build caching for performance optimization
 
 #### `quality-gate` - Final Validation
+
 - Validates all previous jobs passed
 - Enforces 80% minimum code coverage
 - Provides comprehensive quality summary
 
 **Quality Requirements**:
+
 - 100% test pass rate (no failures allowed)
 - 80% minimum code coverage
 - Zero high-severity security vulnerabilities
@@ -70,6 +78,7 @@ Our CI/CD strategy implements a comprehensive quality-first approach with the fo
 **Purpose**: Automated deployment to staging and production environments.
 
 **Triggered by**:
+
 - Pushes to `main` branch (staging deployment)
 - Release tags (production deployment)
 - Manual workflow dispatch
@@ -77,31 +86,37 @@ Our CI/CD strategy implements a comprehensive quality-first approach with the fo
 **Jobs**:
 
 #### `pre-deployment` - Validation
+
 - Re-runs core tests to ensure deployment readiness
 - Generates version information for container tagging
 
 #### `build-and-push` - Container Registry
+
 - Builds optimized Docker images
 - Pushes to GitHub Container Registry (ghcr.io)
 - Generates Software Bill of Materials (SBOM)
 - Security scans published containers
 
 #### `deploy-staging` - Staging Environment
+
 - Deploys to staging environment on main branch pushes
 - Runs smoke tests against deployed application
 - Provides deployment notifications
 
 #### `deploy-production` - Production Environment
+
 - Deploys to production on release tags
 - Comprehensive health checks
 - Blue/green deployment strategy support
 
 #### `database-migration` - Schema Updates
+
 - Flyway database migrations for each environment
 - Backup verification and rollback capability
 - Environment-specific migration validation
 
 #### `post-deployment` - Verification
+
 - Comprehensive deployment verification
 - Performance monitoring setup
 - Status page updates
@@ -111,10 +126,12 @@ Our CI/CD strategy implements a comprehensive quality-first approach with the fo
 **Purpose**: Validates GitHub Actions workflow files for syntax and completeness.
 
 **Triggered by**:
+
 - Changes to `.github/workflows/` directory
 - Changes to build configuration files
 
 **Validation Checks**:
+
 - YAML syntax validation
 - Required job presence verification
 - Security tool configuration checks
@@ -176,7 +193,7 @@ All quality tools are configured with project-specific rules:
 ### Coverage Requirements
 
 - **Minimum Coverage**: 80% for all new code
-- **Exclusions**: 
+- **Exclusions**:
   - Application main classes
   - Configuration classes
   - DTOs and simple data classes
@@ -243,18 +260,21 @@ Our Dockerfile implements security best practices:
 #### Build Failures
 
 1. **Java Version Mismatch**
+
    ```bash
    # Check gradle.properties for Java 21 configuration
    org.gradle.java.home=/path/to/java-21
    ```
 
 2. **Test Failures**
+
    ```bash
    # Run tests locally with same environment
    ./gradlew test integrationTest
    ```
 
 3. **Coverage Below Threshold**
+
    ```bash
    # Generate coverage report
    ./gradlew jacocoTestReport
@@ -274,6 +294,7 @@ Our Dockerfile implements security best practices:
 #### Deployment Issues
 
 1. **Database Migration Failures**
+
    ```bash
    # Check Flyway migration status
    ./gradlew :database:flywayInfo

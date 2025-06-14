@@ -19,6 +19,7 @@ The People and Organizations Domain microservice provides core business models f
 ## Architecture Overview
 
 ### DDD Layer Architecture
+
 ```
 api/src/main/java/org/erp_microservices/peopleandorganizations/api/
 ├── application/          # Application layer (DTOs, GraphQL resolvers)
@@ -37,6 +38,7 @@ api/src/main/java/org/erp_microservices/peopleandorganizations/api/
 ```
 
 ### Key Domain Concepts
+
 - **Party Model**: Universal abstraction for Person and Organization entities
 - **Party Roles**: Flexible role system (Customer, Supplier, Employee, etc.)
 - **Party Classifications**: Dynamic categorization (VIP, Gold Customer, etc.)
@@ -78,6 +80,7 @@ PeopleAndOrganizationDomain/
 ## Project-Specific Commands
 
 ### Environment Setup
+
 ```bash
 # Ensure Java 21 is available (project uses gradle.properties to configure)
 java -version  # Should show Java 21 or compatible
@@ -89,6 +92,7 @@ cd PeopleAndOrganizationDomain
 ```
 
 ### Build and Test
+
 ```bash
 # Build entire project
 ./gradlew build
@@ -101,7 +105,7 @@ cd PeopleAndOrganizationDomain
 
 # API module specific
 ./gradlew :api:build         # Build API module
-./gradlew :api:test          # Run API tests  
+./gradlew :api:test          # Run API tests
 ./gradlew :api:bootRun       # Run Spring Boot application
 ./gradlew :api:compileJava   # Compile only
 ./gradlew :api:compileTestJava # Compile tests
@@ -119,6 +123,7 @@ npm run preview              # Preview production build
 ```
 
 ### Deployment
+
 ```bash
 # Build production JAR
 ./gradlew :api:bootJar
@@ -134,6 +139,7 @@ java -jar api/build/libs/api-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
 ## Configuration
 
 ### Required Environment Variables
+
 ```bash
 # Database
 SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/people_and_organizations
@@ -147,6 +153,7 @@ SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_COGNITO_ISSUER_URI=https://cognito-idp.re
 ```
 
 ### Application Configuration
+
 - Main config: `api/src/main/resources/application.yml`
 - GraphQL endpoint: `/graphql`
 - GraphiQL UI: `/graphiql` (development only)
@@ -155,6 +162,7 @@ SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_COGNITO_ISSUER_URI=https://cognito-idp.re
 ## Testing Approach
 
 ### Test Categories
+
 1. **Unit Tests**: Domain model and service logic testing
    - Location: `src/test/java/.../domain/model/`
    - Coverage requirement: 90% (excluding getters/setters)
@@ -175,6 +183,7 @@ SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_COGNITO_ISSUER_URI=https://cognito-idp.re
 ## Current Implementation Status
 
 ### ✅ Completed Features
+
 - Domain model implementation (Party, Person, Organization)
 - Contact mechanism models (EmailAddress, PostalAddress, TelecomNumber)
 - Party relationship models
@@ -185,6 +194,7 @@ SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_COGNITO_ISSUER_URI=https://cognito-idp.re
 - Java 21 compatibility configuration
 
 ### 📋 TODO Items
+
 - [ ] GraphQL schema definition (`api/src/main/resources/graphql/schema.graphqls`)
 - [ ] GraphQL resolver implementations
 - [ ] DTO layer for GraphQL types
@@ -196,6 +206,7 @@ SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_COGNITO_ISSUER_URI=https://cognito-idp.re
 - [ ] Performance optimization (lazy loading, caching)
 
 ### ⚠️ Known Limitations
+
 - GraphQL schema not yet defined (tests expect it but will fail)
 - No database migrations (Flyway/Liquibase not configured)
 - Security not fully implemented (OAuth2 config exists but not enforced)
@@ -205,21 +216,26 @@ SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_COGNITO_ISSUER_URI=https://cognito-idp.re
 ## Troubleshooting
 
 ### Java Version Issues
+
 **Problem**: Build fails with "Unsupported class file major version 68"
 **Solution**: Ensure `gradle.properties` contains correct Java 21 path. The project is configured to use Java 21 even if Java 24 is the system default.
 
 ### Test Compilation Errors
+
 **Problem**: Tests fail to compile with "cannot find symbol" errors
 **Solution**: Run `./gradlew clean :api:compileJava` before running tests. Some IDEs may need project refresh.
 
 ### PostgreSQL Connection Issues
+
 **Problem**: Tests fail with database connection errors
-**Solution**: 
+**Solution**:
+
 1. Ensure Docker is running (for Testcontainers)
 2. For local development, ensure PostgreSQL is running on port 5432
 3. Check database name matches: `people_and_organizations`
 
 ### GraphQL Test Failures
+
 **Problem**: Integration tests fail with "No GraphQL schema found"
 **Solution**: This is expected until GraphQL schema is implemented. Tests are written first following TDD.
 
