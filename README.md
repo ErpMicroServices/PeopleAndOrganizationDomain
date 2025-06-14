@@ -5,6 +5,7 @@ A comprehensive microservice for managing people, organizations, and their relat
 ## Overview
 
 The People and Organizations Domain microservice provides the foundational data models and business logic for:
+
 - **Customer Relationship Management (CRM)**
 - **Human Resource Management (HRM)**
 - **Vendor Relationship Management (VRM)**
@@ -16,22 +17,26 @@ This service implements the **Party Model** pattern, providing a flexible and ex
 ## Key Features
 
 ### 🏢 Party Management
+
 - **Unified Party Model**: Abstract representation for both people and organizations
 - **Flexible Role System**: Assign multiple roles (Customer, Supplier, Employee, Partner, etc.)
 - **Dynamic Classifications**: Categorize parties (VIP Customer, Gold Partner, etc.)
 - **External Identifications**: Track SSN, EIN, passport numbers, and other identifiers
 
 ### 📞 Contact Mechanisms
+
 - **Multiple Contact Types**: Email addresses, phone numbers, postal addresses
 - **Purpose-Based Contacts**: Billing address, shipping address, work phone, etc.
 - **Time-Bounded Validity**: Track when contact information is valid
 
 ### 🤝 Relationship Management
+
 - **Typed Relationships**: Employment, ownership, partnership, family relationships
 - **Bidirectional Tracking**: "John works for Acme" and "Acme employs John"
 - **Historical Records**: Track relationship changes over time
 
 ### 🔍 Advanced Querying
+
 - **GraphQL API**: Flexible, efficient data fetching
 - **Complex Searches**: Find parties by role, classification, or relationship
 - **Pagination Support**: Handle large datasets efficiently
@@ -39,6 +44,7 @@ This service implements the **Party Model** pattern, providing a flexible and ex
 ## Getting Started
 
 ### Prerequisites
+
 - Java 21 or higher
 - PostgreSQL 15+
 - Docker (for development with Testcontainers)
@@ -47,12 +53,14 @@ This service implements the **Party Model** pattern, providing a flexible and ex
 ### Quick Start
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/ErpMicroServices/PeopleAndOrganizationDomain.git
    cd PeopleAndOrganizationDomain
    ```
 
 2. **Set up the database**
+
    ```bash
    createdb people_and_organizations
    ```
@@ -60,6 +68,7 @@ This service implements the **Party Model** pattern, providing a flexible and ex
 3. **Configure environment** (see Configuration section below)
 
 4. **Build and run**
+
    ```bash
    ./gradlew build
    ./gradlew :api:bootRun
@@ -88,6 +97,7 @@ SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_COGNITO_ISSUER_URI=https://cognito-idp.re
 ## API Examples
 
 ### Create a Person
+
 ```graphql
 mutation CreatePerson {
   createPerson(input: {
@@ -104,6 +114,7 @@ mutation CreatePerson {
 ```
 
 ### Find Organizations by Name
+
 ```graphql
 query FindOrganizations {
   organizations(name: "Acme", page: 0, size: 10) {
@@ -118,6 +129,7 @@ query FindOrganizations {
 ```
 
 ### Add Contact Information
+
 ```graphql
 mutation AddEmail {
   addEmailToParty(input: {
@@ -148,7 +160,53 @@ PeopleAndOrganizationDomain/
 
 ## Development
 
+### Pre-commit Hooks
+
+This project uses pre-commit hooks to ensure code quality before commits reach the repository.
+
+#### Setup
+
+```bash
+# Install pre-commit (if not already installed)
+pip install pre-commit
+
+# Install the git hooks
+pre-commit install
+pre-commit install --hook-type commit-msg
+pre-commit install --hook-type pre-push
+```
+
+#### What Gets Checked
+
+**On every commit:**
+
+- Trailing whitespace removal
+- End-of-file fixes
+- YAML/JSON/XML syntax validation
+- Large file prevention (>1MB)
+- Merge conflict markers
+- Secret detection
+- Java compilation
+- ESLint for JavaScript/React code
+- Markdown formatting
+
+**Before push:**
+
+- Unit tests
+- Code quality checks (Checkstyle, PMD)
+
+#### Running Hooks Manually
+
+```bash
+# Run all hooks on all files
+pre-commit run --all-files
+
+# Run specific hook
+pre-commit run gradle-compile --all-files
+```
+
 ### Building from Source
+
 ```bash
 # Full build with tests
 ./gradlew build
@@ -161,6 +219,7 @@ PeopleAndOrganizationDomain/
 ```
 
 ### Running Tests
+
 ```bash
 # All tests
 ./gradlew test
@@ -173,9 +232,11 @@ PeopleAndOrganizationDomain/
 ```
 
 ### Database Migrations
+
 The project uses Flyway for database version control. Migrations are automatically applied on application startup.
 
 To run migrations manually:
+
 ```bash
 ./gradlew :database:flywayMigrate
 ```
@@ -192,9 +253,11 @@ We follow a strict Test-Driven Development (TDD) approach:
 For detailed development workflow and standards, see [CLAUDE.md](CLAUDE.md).
 
 ### Reporting Issues
+
 Please report issues at: https://github.com/ErpMicroServices/PeopleAndOrganizationDomain/issues
 
 ### Pull Requests
+
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Write tests for your changes
@@ -211,6 +274,7 @@ Please report issues at: https://github.com/ErpMicroServices/PeopleAndOrganizati
 ## Support
 
 For questions and support:
+
 - GitHub Issues: https://github.com/ErpMicroServices/PeopleAndOrganizationDomain/issues
 - Documentation: See [CLAUDE.md](CLAUDE.md) for technical details
 

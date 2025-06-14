@@ -85,15 +85,15 @@ class PartyRoleTypeRepositoryTest {
     void shouldHandleHierarchicalPartyRoleTypes() {
         // Given
         PartyRoleType savedEmployeeType = entityManager.persistAndFlush(employeeRoleType);
-        
+
         PartyRoleType managerRoleType = new PartyRoleType();
         managerRoleType.setDescription("MANAGER");
         managerRoleType.setParent(savedEmployeeType);
-        
+
         PartyRoleType executiveRoleType = new PartyRoleType();
         executiveRoleType.setDescription("EXECUTIVE");
         executiveRoleType.setParent(savedEmployeeType);
-        
+
         // When
         entityManager.persistAndFlush(managerRoleType);
         entityManager.persistAndFlush(executiveRoleType);
@@ -101,11 +101,11 @@ class PartyRoleTypeRepositoryTest {
         // Then
         Optional<PartyRoleType> foundManager = partyRoleTypeRepository.findByDescription("MANAGER");
         Optional<PartyRoleType> foundExecutive = partyRoleTypeRepository.findByDescription("EXECUTIVE");
-        
+
         assertThat(foundManager).isPresent();
         assertThat(foundManager.get().getParent()).isNotNull();
         assertThat(foundManager.get().getParent().getDescription()).isEqualTo("EMPLOYEE");
-        
+
         assertThat(foundExecutive).isPresent();
         assertThat(foundExecutive.get().getParent()).isNotNull();
         assertThat(foundExecutive.get().getParent().getDescription()).isEqualTo("EMPLOYEE");

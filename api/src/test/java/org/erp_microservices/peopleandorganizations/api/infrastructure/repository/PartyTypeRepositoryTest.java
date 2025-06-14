@@ -76,11 +76,11 @@ class PartyTypeRepositoryTest {
     void shouldHandleHierarchicalPartyTypes() {
         // Given
         PartyType savedPersonType = entityManager.persistAndFlush(personType);
-        
+
         PartyType employeeType = new PartyType();
         employeeType.setDescription("EMPLOYEE");
         employeeType.setParent(savedPersonType);
-        
+
         // When
         PartyType savedEmployeeType = entityManager.persistAndFlush(employeeType);
 

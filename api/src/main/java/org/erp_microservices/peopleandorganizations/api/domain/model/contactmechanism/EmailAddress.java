@@ -12,15 +12,15 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 public class EmailAddress extends ContactMechanism {
-    
+
     public EmailAddress() {
         super();
         setContactMechanismType("EMAIL");
     }
-    
+
     @Column(name = "email_address", nullable = false)
     private String emailAddress;
-    
+
     @Builder
     public EmailAddress(UUID id, String comment, String emailAddress) {
         super(id, "EMAIL", comment);

@@ -130,10 +130,10 @@ class PartyJpaRepositoryTest {
         NameType legalNameType = new NameType();
         legalNameType.setDescription("Legal Name");
         legalNameType = entityManager.persistAndFlush(legalNameType);
-        
+
         entityManager.persistAndFlush(testPerson);
         entityManager.persistAndFlush(testOrganization);
-        
+
         // Add party names
         PartyName personName = PartyName.builder()
                 .party(testPerson)
@@ -141,14 +141,14 @@ class PartyJpaRepositoryTest {
                 .name("John Doe")
                 .build();
         testPerson.getNames().add(personName);
-        
+
         PartyName orgName = PartyName.builder()
                 .party(testOrganization)
                 .nameType(legalNameType)
                 .name("Acme Corporation")
                 .build();
         testOrganization.getNames().add(orgName);
-        
+
         entityManager.persistAndFlush(testPerson);
         entityManager.persistAndFlush(testOrganization);
 
@@ -260,7 +260,7 @@ class PartyJpaRepositoryTest {
         identification.setIdentificationType(ssnType);
         identification.setIdentifier("123-45-6789");
         identification.setFromDate(LocalDate.now());
-        
+
         testPerson.addPartyIdentification(identification);
         entityManager.persistAndFlush(testPerson);
 
@@ -286,7 +286,7 @@ class PartyJpaRepositoryTest {
         classification.setClassificationType(vipType);
         classification.setValue("Gold");
         classification.setFromDate(LocalDate.now());
-        
+
         testPerson.addPartyClassification(classification);
         entityManager.persistAndFlush(testPerson);
 

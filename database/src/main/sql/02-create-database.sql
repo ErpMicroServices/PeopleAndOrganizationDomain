@@ -416,4 +416,3 @@ CREATE TABLE IF NOT EXISTS facility_contact_mechanism
     contact_mechanism_id UUID NOT NULL REFERENCES contact_mechanism (id),
     CONSTRAINT facility_contact_mechanism_pk PRIMARY KEY (id)
 );
-
