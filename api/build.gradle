@@ -61,5 +61,20 @@ dependencyManagement {
 }
 
 test {
-    useJUnitPlatform()
+    useJUnitPlatform {
+        excludeTags 'integration'
+    }
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
+// Configure the existing integrationTest task
+integrationTest {
+    useJUnitPlatform {
+        includeTags 'integration'
+    }
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }
