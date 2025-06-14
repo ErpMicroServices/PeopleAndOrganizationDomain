@@ -42,12 +42,12 @@ class PartyRepositoryImplTest {
                 .firstName("John")
                 .lastName("Doe")
                 .build();
-        testPerson.setId(1L);
+        testPerson.setId(personId);
 
         testOrganization = Organization.builder()
                 .name("Acme Corporation")
                 .build();
-        testOrganization.setId(2L);
+        testOrganization.setId(organizationId);
     }
 
     @Test
@@ -68,7 +68,7 @@ class PartyRepositoryImplTest {
     @DisplayName("Should find party by ID")
     void shouldFindPartyById() {
         // Given
-        when(partyJpaRepository.findById(anyLong())).thenReturn(Optional.of(testPerson));
+        when(partyJpaRepository.findById(any(UUID.class))).thenReturn(Optional.of(testPerson));
 
         // When
         Optional<Party> foundParty = partyRepository.findById(personId);
@@ -76,21 +76,21 @@ class PartyRepositoryImplTest {
         // Then
         assertThat(foundParty).isPresent();
         assertThat(foundParty.get()).isEqualTo(testPerson);
-        verify(partyJpaRepository).findById(anyLong());
+        verify(partyJpaRepository).findById(personId);
     }
 
     @Test
     @DisplayName("Should return empty when party not found by ID")
     void shouldReturnEmptyWhenPartyNotFoundById() {
         // Given
-        when(partyJpaRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(partyJpaRepository.findById(any(UUID.class))).thenReturn(Optional.empty());
 
         // When
         Optional<Party> foundParty = partyRepository.findById(personId);
 
         // Then
         assertThat(foundParty).isEmpty();
-        verify(partyJpaRepository).findById(anyLong());
+        verify(partyJpaRepository).findById(personId);
     }
 
     @Test
@@ -239,27 +239,27 @@ class PartyRepositoryImplTest {
     @DisplayName("Should delete party by ID")
     void shouldDeletePartyById() {
         // Given
-        doNothing().when(partyJpaRepository).deleteById(anyLong());
+        doNothing().when(partyJpaRepository).deleteById(any(UUID.class));
 
         // When
         partyRepository.deleteById(personId);
 
         // Then
-        verify(partyJpaRepository).deleteById(anyLong());
+        verify(partyJpaRepository).deleteById(personId);
     }
 
     @Test
     @DisplayName("Should check if party exists by ID")
     void shouldCheckIfPartyExistsById() {
         // Given
-        when(partyJpaRepository.existsById(anyLong())).thenReturn(true);
+        when(partyJpaRepository.existsById(any(UUID.class))).thenReturn(true);
 
         // When
         boolean exists = partyRepository.existsById(personId);
 
         // Then
         assertThat(exists).isTrue();
-        verify(partyJpaRepository).existsById(anyLong());
+        verify(partyJpaRepository).existsById(personId);
     }
 
     @Test

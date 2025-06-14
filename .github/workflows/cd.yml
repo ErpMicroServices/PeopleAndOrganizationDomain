@@ -237,11 +237,9 @@ jobs:
     
     strategy:
       matrix:
-        environment: [staging, production]
-        exclude:
+        include:
+          - environment: staging
           - environment: production
-            # Only exclude production if not a release
-            ${{ github.event_name != 'release' }}
 
     environment:
       name: ${{ matrix.environment }}
