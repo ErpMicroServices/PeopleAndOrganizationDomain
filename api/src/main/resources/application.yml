@@ -1,0 +1,54 @@
+spring:
+  application:
+    name: people-and-organizations-api
+  
+  datasource:
+    url: jdbc:postgresql://localhost:5432/people_and_organizations
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+    
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: false
+        jdbc:
+          time_zone: UTC
+    open-in-view: false
+    
+  graphql:
+    graphiql:
+      enabled: true
+    path: /graphql
+    websocket:
+      path: /subscriptions
+      
+  security:
+    oauth2:
+      client:
+        registration:
+          cognito:
+            client-id: ${COGNITO_CLIENT_ID:your-client-id}
+            client-secret: ${COGNITO_CLIENT_SECRET:your-client-secret}
+            scope: openid,profile,email
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+        provider:
+          cognito:
+            authorization-uri: https://your-domain.auth.region.amazoncognito.com/oauth2/authorize
+            token-uri: https://your-domain.auth.region.amazoncognito.com/oauth2/token
+            user-info-uri: https://your-domain.auth.region.amazoncognito.com/oauth2/userInfo
+            jwk-set-uri: https://cognito-idp.region.amazonaws.com/your-user-pool-id/.well-known/jwks.json
+
+server:
+  port: 8080
+  
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.springframework.graphql: DEBUG
