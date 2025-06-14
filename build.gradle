@@ -1,23 +1,143 @@
 plugins {
     id 'java'
+    id 'jacoco'
+    id 'checkstyle'
+    id 'pmd'
+    id 'com.github.spotbugs' version '6.0.22'
+    id 'org.owasp.dependencycheck' version '10.0.3'
 }
 
 group = 'org.erp_microservices.peopleandorganizations'
 version = '1.0-SNAPSHOT'
 
-subprojects {
-    apply plugin: 'java'
-    
+// Global configuration for all subprojects
+allprojects {
     repositories {
         mavenCentral()
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'jacoco'
+    apply plugin: 'checkstyle'
+    apply plugin: 'pmd'
+    apply plugin: 'com.github.spotbugs'
+    apply plugin: 'org.owasp.dependencycheck'
+    
+    java {
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     
     dependencies {
         testImplementation platform('org.junit:junit-bom:5.10.0')
         testImplementation 'org.junit.jupiter:junit-jupiter'
+        spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.13.0'
     }
     
     test {
         useJUnitPlatform()
+        finalizedBy jacocoTestReport
     }
+    
+    // JaCoCo Configuration
+    jacoco {
+        toolVersion = "0.8.12"
+    }
+    
+    jacocoTestReport {
+        dependsOn test
+        reports {
+            xml.required.set(true)
+            html.required.set(true)
+        }
+        afterEvaluate {
+            classDirectories.setFrom files(classDirectories.files.collect {
+                fileTree(dir: it, exclude: [
+                    '**/*Application*',
+                    '**/*Config*',
+                    '**/*Configuration*',
+                    '**/dto/**',
+                    '**/entity/**/*_.class'  // Lombok generated methods
+                ])
+            })
+        }
+    }
+    
+    jacocoTestCoverageVerification {
+        violationRules {
+            rule {
+                limit {
+                    minimum = 0.80  // 80% minimum coverage
+                }
+            }
+        }
+    }
+    
+    // Checkstyle Configuration
+    checkstyle {
+        toolVersion = '10.20.1'
+        configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+        ignoreFailures = false
+        maxWarnings = 0
+    }
+    
+    // PMD Configuration
+    pmd {
+        toolVersion = '7.6.0'
+        ignoreFailures = false
+        ruleSetFiles = files(rootProject.file('config/pmd/pmd-rules.xml'))
+    }
+    
+    // SpotBugs Configuration
+    spotbugs {
+        toolVersion = '4.8.6'
+        ignoreFailures = false
+        excludeFilter = rootProject.file('config/spotbugs/spotbugs-exclude.xml')
+    }
+    
+    spotbugsMain {
+        reports {
+            xml.required.set(true)
+            html.required.set(true)
+        }
+    }
+    
+    // OWASP Dependency Check Configuration
+    dependencyCheck {
+        autoUpdate = true
+        failBuildOnCVSS = 7.0
+        suppressionFile = rootProject.file('config/owasp/suppressions.xml')
+        formats = ['HTML', 'XML', 'JSON']
+    }
+    
+    // Integration test task
+    task integrationTest(type: Test) {
+        description = 'Runs integration tests.'
+        group = 'verification'
+        testClassesDirs = sourceSets.test.output.classesDirs
+        classpath = sourceSets.test.runtimeClasspath
+        shouldRunAfter test
+        
+        useJUnitPlatform {
+            includeTags 'integration'
+        }
+        
+        // Integration test coverage
+        finalizedBy jacocoTestReport
+    }
+    
+    // Quality gate task - ensures all quality checks pass
+    task qualityGate {
+        description = 'Runs all quality checks and enforces quality gates'
+        group = 'verification'
+        dependsOn check, jacocoTestCoverageVerification, dependencyCheckAnalyze
+        
+        doLast {
+            println "✅ All quality gates passed!"
+        }
+    }
+    
+    check.dependsOn integrationTest
 }

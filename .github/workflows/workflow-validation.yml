@@ -1,0 +1,140 @@
+name: Workflow Validation
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/**'
+      - 'build.gradle'
+      - '**/build.gradle'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/**'
+
+jobs:
+  validate-workflows:
+    name: Validate GitHub Actions Workflows
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate workflow syntax
+        run: |
+          echo "🔍 Validating GitHub Actions workflow syntax"
+          
+          # Check for YAML syntax errors
+          for workflow in .github/workflows/*.yml .github/workflows/*.yaml; do
+            if [ -f "$workflow" ]; then
+              echo "Validating $workflow"
+              python3 -c "
+          import yaml
+          import sys
+          try:
+              with open('$workflow', 'r') as f:
+                  yaml.safe_load(f)
+              print('✅ $workflow is valid YAML')
+          except yaml.YAMLError as e:
+              print('❌ $workflow has YAML syntax error:', e)
+              sys.exit(1)
+          except Exception as e:
+              print('❌ Error validating $workflow:', e)
+              sys.exit(1)
+              "
+            fi
+          done
+
+      - name: Check workflow completeness
+        run: |
+          echo "📋 Checking workflow completeness"
+          
+          required_files=(
+            ".github/workflows/ci.yml"
+            ".github/workflows/cd.yml"
+          )
+          
+          for file in "${required_files[@]}"; do
+            if [ ! -f "$file" ]; then
+              echo "❌ Missing required workflow file: $file"
+              exit 1
+            else
+              echo "✅ Found $file"
+            fi
+          done
+
+      - name: Validate CI workflow requirements
+        run: |
+          echo "🔍 Validating CI workflow requirements"
+          
+          ci_file=".github/workflows/ci.yml"
+          
+          # Check for required jobs
+          required_jobs=(
+            "java-ci"
+            "code-quality"
+            "security-scan"
+            "ui-components"
+            "docker-build"
+            "quality-gate"
+          )
+          
+          for job in "${required_jobs[@]}"; do
+            if grep -q "^  ${job}:" "$ci_file"; then
+              echo "✅ Found required job: $job"
+            else
+              echo "❌ Missing required job: $job"
+              exit 1
+            fi
+          done
+
+      - name: Validate CD workflow requirements
+        run: |
+          echo "🔍 Validating CD workflow requirements"
+          
+          cd_file=".github/workflows/cd.yml"
+          
+          # Check for required jobs
+          required_jobs=(
+            "pre-deployment"
+            "build-and-push"
+            "deploy-staging"
+            "deploy-production"
+            "database-migration"
+          )
+          
+          for job in "${required_jobs[@]}"; do
+            if grep -q "^  ${job}:" "$cd_file"; then
+              echo "✅ Found required job: $job"
+            else
+              echo "❌ Missing required job: $job"
+              exit 1
+            fi
+          done
+
+      - name: Check security configurations
+        run: |
+          echo "🔒 Checking security configurations"
+          
+          # Verify security scanning tools are included
+          if grep -q "trivy-action" .github/workflows/ci.yml; then
+            echo "✅ Trivy security scanning configured"
+          else
+            echo "❌ Trivy security scanning not found"
+            exit 1
+          fi
+          
+          if grep -q "dependencyCheckAnalyze" .github/workflows/ci.yml; then
+            echo "✅ OWASP dependency check configured"
+          else
+            echo "❌ OWASP dependency check not found"
+            exit 1
+          fi
+
+      - name: Validate workflow summary
+        run: |
+          echo "## Workflow Validation Results" >> $GITHUB_STEP_SUMMARY
+          echo "✅ All workflow files are syntactically valid" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Required CI/CD jobs are present" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Security scanning tools are configured" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Workflow validation completed successfully" >> $GITHUB_STEP_SUMMARY

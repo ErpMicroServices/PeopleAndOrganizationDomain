@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter xmlns="https://github.com/spotbugs/filter/3.0.0"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="https://github.com/spotbugs/filter/3.0.0 https://raw.githubusercontent.com/spotbugs/spotbugs/3.1.0/spotbugs/etc/findbugsfilter.xsd">
+
+    <!-- Exclude auto-generated files -->
+    <Match>
+        <Class name="~.*\.QA.*"/>
+    </Match>
+
+    <!-- Exclude test files from certain checks -->
+    <Match>
+        <Class name="~.*Test"/>
+        <Bug pattern="DM_EXIT"/>
+    </Match>
+
+    <!-- Exclude Lombok generated code -->
+    <Match>
+        <Class name="~.*\$.*"/>
+        <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+
+    <Match>
+        <Class name="~.*\$.*"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+
+    <!-- Exclude Spring Boot Application classes -->
+    <Match>
+        <Class name="~.*Application"/>
+        <Method name="main"/>
+        <Bug pattern="DM_EXIT"/>
+    </Match>
+
+    <!-- Exclude Spring Configuration classes from certain checks -->
+    <Match>
+        <Class name="~.*Config.*"/>
+        <Bug pattern="UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR"/>
+    </Match>
+
+    <!-- Exclude JPA Entity classes from serialization warnings -->
+    <Match>
+        <Or>
+            <Class name="~.*\.model\..*"/>
+            <Class name="~.*\.entity\..*"/>
+        </Or>
+        <Bug pattern="SE_BAD_FIELD"/>
+    </Match>
+
+    <Match>
+        <Or>
+            <Class name="~.*\.model\..*"/>
+            <Class name="~.*\.entity\..*"/>
+        </Or>
+        <Bug pattern="SE_NO_SERIALVERSIONID"/>
+    </Match>
+
+    <!-- Exclude DTO classes from certain checks -->
+    <Match>
+        <Class name="~.*\.dto\..*"/>
+        <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+
+    <Match>
+        <Class name="~.*\.dto\..*"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+
+    <!-- Exclude GraphQL resolver classes -->
+    <Match>
+        <Class name="~.*Resolver"/>
+        <Bug pattern="UWF_UNWRITTEN_FIELD"/>
+    </Match>
+
+    <!-- Exclude test configuration classes -->
+    <Match>
+        <Class name="~.*TestcontainersConfiguration"/>
+        <Bug pattern="UWF_UNWRITTEN_FIELD"/>
+    </Match>
+
+    <!-- Common exclusions for Spring Boot applications -->
+    <Match>
+        <Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD"/>
+    </Match>
+
+    <!-- Exclude certain patterns that are common in Spring Boot -->
+    <Match>
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE"/>
+        <Method name="~.*Repository.*"/>
+    </Match>
+
+</FindBugsFilter>
