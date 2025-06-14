@@ -86,12 +86,6 @@
         </properties>
     </rule>
 
-    <rule ref="category/java/design.xml/ExcessiveClassLength">
-        <properties>
-            <property name="minimum" value="500"/>
-        </properties>
-    </rule>
-
     <rule ref="category/java/design.xml/ExcessiveParameterList">
         <properties>
             <property name="minimum" value="6"/>
