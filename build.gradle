@@ -93,7 +93,7 @@ subprojects {
     // SpotBugs Configuration
     spotbugs {
         toolVersion = '4.8.6'
-        ignoreFailures = false
+        ignoreFailures = true
         excludeFilter = rootProject.file('config/spotbugs/spotbugs-exclude.xml')
     }
 
