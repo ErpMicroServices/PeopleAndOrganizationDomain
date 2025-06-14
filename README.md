@@ -47,10 +47,41 @@ This service implements the **Party Model** pattern, providing a flexible and ex
 
 - Java 21 or higher
 - PostgreSQL 15+
-- Docker (for development with Testcontainers)
+- Docker and Docker Compose (recommended for development)
 - Node.js 18+ (for UI components)
 
 ### Quick Start
+
+Choose your preferred development approach:
+
+#### 🐳 Docker Development (Recommended)
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/ErpMicroServices/PeopleAndOrganizationDomain.git
+   cd PeopleAndOrganizationDomain
+   ```
+
+2. **Start the complete development environment**
+
+   ```bash
+   docker compose up
+   ```
+
+   This will start:
+   - PostgreSQL database with initialization
+   - Redis for caching
+   - LocalStack for AWS services simulation
+   - Spring Boot API application
+
+3. **Access the services**
+   - GraphQL endpoint: http://localhost:8080/graphql
+   - GraphiQL UI: http://localhost:8080/graphiql
+   - PostgreSQL: localhost:5432
+   - LocalStack: http://localhost:4566
+
+#### 🛠️ Traditional Development
 
 1. **Clone the repository**
 
@@ -77,6 +108,164 @@ This service implements the **Party Model** pattern, providing a flexible and ex
 5. **Access the API**
    - GraphQL endpoint: http://localhost:8080/graphql
    - GraphiQL UI: http://localhost:8080/graphiql (development only)
+
+## 🐳 Docker Development Environment
+
+This project provides a complete Docker-based development environment with all dependencies included.
+
+### Docker Setup
+
+The Docker environment includes:
+
+- **Spring Boot API**: The main application
+- **PostgreSQL 15**: Database with automatic initialization
+- **Redis**: Caching layer for future use
+- **LocalStack**: AWS services simulation (Cognito, S3, Secrets Manager)
+- **Nginx**: Reverse proxy (production only)
+
+### Development Commands
+
+```bash
+# Start all services
+docker compose up
+
+# Start services in background
+docker compose up -d
+
+# View logs
+docker compose logs -f
+
+# Stop all services
+docker compose down
+
+# Rebuild and start (after code changes)
+docker compose up --build
+
+# Start specific service
+docker compose up postgres redis
+```
+
+### Production Deployment
+
+```bash
+# Set environment variables (see .env.example)
+cp .env.example .env
+# Edit .env with your production values
+
+# Start production environment
+docker compose -f docker-compose.prod.yml up -d
+```
+
+### Docker Services
+
+#### API Service
+
+- **Port**: 8080
+- **Health Check**: http://localhost:8080/actuator/health
+- **GraphQL**: http://localhost:8080/graphql
+- **Multi-stage build** with optimized layers
+
+#### PostgreSQL Database
+
+- **Port**: 5432
+- **Database**: people_and_organizations
+- **User**: people_org_user
+- **Password**: dev_password_123 (development)
+- **Initialization**: Automatic schema setup
+
+#### Redis Cache
+
+- **Port**: 6379
+- **Purpose**: Caching and session storage
+
+#### LocalStack (Development Only)
+
+- **Port**: 4566
+- **Services**: Cognito, S3, Secrets Manager, IAM
+- **Dashboard**: http://localhost:4566
+- **Automatic AWS services setup**
+
+### Health Monitoring
+
+Run the comprehensive health check:
+
+```bash
+# Check all services
+./docker/health-check.sh
+
+# Check specific services (when containers are running)
+docker compose exec api curl http://localhost:8080/actuator/health
+docker compose exec postgres pg_isready -U people_org_user
+```
+
+### Development Workflow with Docker
+
+1. **Make code changes** in your IDE
+2. **Rebuild and restart** the API service:
+   ```bash
+   docker compose up --build api
+   ```
+3. **Test your changes** using GraphiQL or the health check script
+4. **View logs** for debugging:
+   ```bash
+   docker compose logs -f api
+   ```
+
+### Troubleshooting Docker
+
+#### Common Issues
+
+**Port Already in Use**
+```bash
+# Find what's using the port
+lsof -ti:8080
+# Kill the process
+kill -9 <PID>
+```
+
+**Database Connection Issues**
+```bash
+# Check PostgreSQL logs
+docker compose logs postgres
+
+# Connect to database directly
+docker compose exec postgres psql -U people_org_user -d people_and_organizations
+```
+
+**Container Won't Start**
+```bash
+# Check container status
+docker compose ps
+
+# View detailed logs
+docker compose logs <service-name>
+
+# Rebuild from scratch
+docker compose down -v
+docker compose up --build
+```
+
+**Clean Restart**
+```bash
+# Remove all containers and volumes
+docker compose down -v
+
+# Remove images (optional)
+docker rmi $(docker images -q "people-org*")
+
+# Start fresh
+docker compose up --build
+```
+
+### Docker Configuration Files
+
+- **`Dockerfile`**: Multi-stage build for the API
+- **`docker-compose.yml`**: Development environment
+- **`docker-compose.prod.yml`**: Production environment
+- **`.dockerignore`**: Files excluded from Docker builds
+- **`docker/postgres/init.sql`**: Database initialization
+- **`docker/localstack/init-aws.sh`**: AWS services setup
+- **`docker/health-check.sh`**: Comprehensive health monitoring
 
 ## Configuration
 
@@ -280,6 +469,7 @@ For questions and support:
 
 ## Roadmap
 
+- [x] **Docker and Docker Compose setup** ✅
 - [ ] Complete GraphQL schema implementation
 - [ ] Add Flyway database migrations
 - [ ] Implement OAuth2 security

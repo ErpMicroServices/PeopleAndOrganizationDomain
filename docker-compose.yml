@@ -1,0 +1,150 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: people-org-postgres
+    environment:
+      POSTGRES_DB: people_and_organizations
+      POSTGRES_USER: people_org_user
+      POSTGRES_PASSWORD: dev_password_123  # pragma: allowlist secret
+      POSTGRES_INITDB_ARGS: "--auth-local=trust"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - people-org-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U people_org_user -d people_and_organizations"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+
+  # LocalStack for AWS Services Simulation
+  localstack:
+    image: localstack/localstack:3.0
+    container_name: people-org-localstack
+    environment:
+      - SERVICES=cognito-idp,s3,secretsmanager,iam
+      - DEBUG=1
+      - DATA_DIR=/tmp/localstack/data
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+    ports:
+      - "4566:4566"
+    volumes:
+      - localstack_data:/tmp/localstack
+      - ./docker/localstack/init-aws.sh:/etc/localstack/init/ready.d/init-aws.sh:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - people-org-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4566/_localstack/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    restart: unless-stopped
+
+  # Redis for Caching
+  redis:
+    image: redis:7-alpine
+    container_name: people-org-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - people-org-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+
+  # Spring Boot API Application
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+    container_name: people-org-api
+    environment:
+      # Database Configuration
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/people_and_organizations
+      SPRING_DATASOURCE_USERNAME: people_org_user
+      SPRING_DATASOURCE_PASSWORD: dev_password_123  # pragma: allowlist secret
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SPRING_JPA_SHOW_SQL: true
+
+      # AWS LocalStack Configuration
+      AWS_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test  # pragma: allowlist secret
+      AWS_ENDPOINT_URL: http://localstack:4566
+
+      # OAuth2/Cognito Configuration (LocalStack)
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_COGNITO_CLIENT_ID: test-client-id
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_COGNITO_CLIENT_SECRET: test-client-secret  # pragma: allowlist secret
+      SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_COGNITO_ISSUER_URI: http://localstack:4566
+
+      # Redis Configuration
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+
+      # Application Configuration
+      SPRING_PROFILES_ACTIVE: development
+      LOGGING_LEVEL_ORG_ERP_MICROSERVICES: DEBUG
+      LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_GRAPHQL: DEBUG
+
+      # Cloud Configuration (disabled for local development)
+      SPRING_CLOUD_VAULT_ENABLED: false
+      SPRING_CLOUD_CONFIG_ENABLED: false
+
+      # JVM Configuration
+      JAVA_OPTS: "-Xms256m -Xmx512m -XX:+UseContainerSupport"
+    ports:
+      - "8080:8080"
+    volumes:
+      # Mount source code for development hot-reload
+      - ./api/src:/app/api/src:ro
+      - ./api/build.gradle:/app/api/build.gradle:ro
+    networks:
+      - people-org-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      localstack:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+    restart: unless-stopped
+
+networks:
+  people-org-network:
+    driver: bridge
+    name: people-org-network
+
+volumes:
+  postgres_data:
+    driver: local
+    name: people-org-postgres-data
+  localstack_data:
+    driver: local
+    name: people-org-localstack-data
+  redis_data:
+    driver: local
+    name: people-org-redis-data
