@@ -41,7 +41,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ env.JAVA_VERSION }}
-          distribution: 'eclipse-temurin'
+          distribution: 'temurin'
 
       - name: Cache Gradle dependencies
         uses: gradle/actions/setup-gradle@v4
@@ -101,7 +101,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ env.JAVA_VERSION }}
-          distribution: 'eclipse-temurin'
+          distribution: 'temurin'
 
       - name: Cache Gradle dependencies
         uses: gradle/actions/setup-gradle@v4
@@ -142,7 +142,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ env.JAVA_VERSION }}
-          distribution: 'eclipse-temurin'
+          distribution: 'temurin'
 
       - name: Cache Gradle dependencies
         uses: gradle/actions/setup-gradle@v4
@@ -248,7 +248,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ env.JAVA_VERSION }}
-          distribution: 'eclipse-temurin'
+          distribution: 'temurin'
 
       - name: Cache Gradle dependencies
         uses: gradle/actions/setup-gradle@v4
