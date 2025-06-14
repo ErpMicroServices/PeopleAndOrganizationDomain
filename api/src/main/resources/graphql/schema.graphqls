@@ -1,0 +1,251 @@
+# GraphQL Schema for People and Organizations Domain
+
+# Scalar types
+scalar UUID
+scalar Date
+scalar DateTime
+
+# Common types
+type PageInfo {
+    totalElements: Int!
+    totalPages: Int!
+    number: Int!
+    size: Int!
+    hasNext: Boolean!
+    hasPrevious: Boolean!
+}
+
+# Enums
+enum GenderType {
+    MALE
+    FEMALE
+    OTHER
+    PREFER_NOT_TO_SAY
+}
+
+# Core Party types
+interface Party {
+    id: ID!
+    partyType: String!
+    comment: String
+}
+
+type Person implements Party {
+    id: ID!
+    partyType: String!
+    comment: String
+    firstName: String
+    middleName: String
+    lastName: String
+    title: String
+    suffix: String
+    birthDate: Date
+    genderType: GenderType
+    fullName: String
+    age: Int
+}
+
+type Organization implements Party {
+    id: ID!
+    partyType: String!
+    comment: String
+    name: String
+    tradingName: String
+    registrationNumber: String
+    establishedDate: Date
+    taxIdNumber: String
+    numberOfEmployees: Int
+    industry: String
+    yearsInBusiness: Int
+    isLargeEnterprise: Boolean
+    isSmallMediumEnterprise: Boolean
+}
+
+# Pagination types
+type PersonPage {
+    content: [Person!]!
+    totalElements: Int!
+    totalPages: Int!
+    number: Int!
+    size: Int!
+    hasNext: Boolean!
+    hasPrevious: Boolean!
+}
+
+type OrganizationPage {
+    content: [Organization!]!
+    totalElements: Int!
+    totalPages: Int!
+    number: Int!
+    size: Int!
+    hasNext: Boolean!
+    hasPrevious: Boolean!
+}
+
+# Contact Mechanism types
+interface ContactMechanism {
+    id: ID!
+    comment: String
+}
+
+type EmailAddress implements ContactMechanism {
+    id: ID!
+    comment: String
+    emailAddress: String!
+}
+
+type TelecomNumber implements ContactMechanism {
+    id: ID!
+    comment: String
+    countryCode: String
+    areaCode: String
+    phoneNumber: String!
+    extension: String
+}
+
+type PostalAddress implements ContactMechanism {
+    id: ID!
+    comment: String
+    address1: String!
+    address2: String
+    city: String!
+    stateProvince: String!
+    postalCode: String!
+    postalCodeExtension: String
+    country: String!
+}
+
+# Party Relationship types
+type PartyRelationship {
+    id: ID!
+    fromParty: Party!
+    toParty: Party!
+    relationshipType: String!
+    fromDate: Date!
+    thruDate: Date
+    comment: String
+}
+
+# Input types for mutations
+input CreatePersonInput {
+    firstName: String
+    middleName: String
+    lastName: String
+    title: String
+    suffix: String
+    birthDate: Date
+    genderType: GenderType
+    comment: String
+}
+
+input UpdatePersonInput {
+    firstName: String
+    middleName: String
+    lastName: String
+    title: String
+    suffix: String
+    birthDate: Date
+    genderType: GenderType
+    comment: String
+}
+
+input CreateOrganizationInput {
+    name: String!
+    tradingName: String
+    registrationNumber: String
+    establishedDate: Date
+    taxIdNumber: String
+    numberOfEmployees: Int
+    industry: String
+    comment: String
+}
+
+input UpdateOrganizationInput {
+    name: String
+    tradingName: String
+    registrationNumber: String
+    establishedDate: Date
+    taxIdNumber: String
+    numberOfEmployees: Int
+    industry: String
+    comment: String
+}
+
+input AddEmailInput {
+    partyId: ID!
+    emailAddress: String!
+    comment: String
+}
+
+input AddPhoneInput {
+    partyId: ID!
+    countryCode: String
+    areaCode: String
+    phoneNumber: String!
+    extension: String
+    comment: String
+}
+
+input AddPostalAddressInput {
+    partyId: ID!
+    address1: String!
+    address2: String
+    city: String!
+    stateProvince: String!
+    postalCode: String!
+    postalCodeExtension: String
+    country: String!
+    comment: String
+}
+
+input CreatePartyRelationshipInput {
+    fromPartyId: ID!
+    toPartyId: ID!
+    relationshipType: String!
+    fromDate: Date!
+    comment: String
+}
+
+input UpdatePartyRelationshipInput {
+    relationshipType: String
+    comment: String
+}
+
+# Root Query type
+type Query {
+    # Party queries
+    person(id: ID!): Person
+    people(page: Int = 0, size: Int = 20): PersonPage!
+    organization(id: ID!): Organization
+    organizations(page: Int = 0, size: Int = 20): OrganizationPage!
+    
+    # Contact mechanism queries
+    partyContactMechanisms(partyId: ID!): [ContactMechanism!]!
+    
+    # Party relationship queries
+    partyRelationships(partyId: ID!, page: Int = 0, size: Int = 20): [PartyRelationship!]!
+}
+
+# Root Mutation type
+type Mutation {
+    # Party mutations
+    createPerson(input: CreatePersonInput!): Person!
+    updatePerson(id: ID!, input: UpdatePersonInput!): Person!
+    deletePerson(id: ID!): Boolean!
+    
+    createOrganization(input: CreateOrganizationInput!): Organization!
+    updateOrganization(id: ID!, input: UpdateOrganizationInput!): Organization!
+    deleteOrganization(id: ID!): Boolean!
+    
+    # Contact mechanism mutations
+    addEmailToParty(input: AddEmailInput!): ContactMechanism!
+    addPhoneToParty(input: AddPhoneInput!): ContactMechanism!
+    addPostalAddressToParty(input: AddPostalAddressInput!): ContactMechanism!
+    removeContactMechanismFromParty(partyId: ID!, contactMechanismId: ID!): Boolean!
+    updateContactMechanismPurposes(contactMechanismId: ID!, purposes: [String!]!): ContactMechanism!
+    
+    # Party relationship mutations
+    createPartyRelationship(input: CreatePartyRelationshipInput!): PartyRelationship!
+    updatePartyRelationship(id: ID!, input: UpdatePartyRelationshipInput!): PartyRelationship!
+    terminatePartyRelationship(id: ID!): PartyRelationship!
+}

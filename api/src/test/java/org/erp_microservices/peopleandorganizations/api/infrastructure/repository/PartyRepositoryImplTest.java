@@ -116,7 +116,7 @@ class PartyRepositoryImplTest {
         PartyType partyType = new PartyType();
         partyType.setDescription("PERSON");
         List<Party> persons = Collections.singletonList(testPerson);
-        when(partyJpaRepository.findByPartyType(partyType)).thenReturn(persons);
+        when(partyJpaRepository.findByPartyType("PERSON")).thenReturn(persons);
 
         // When
         List<Party> foundParties = partyRepository.findByType(partyType);
@@ -124,7 +124,7 @@ class PartyRepositoryImplTest {
         // Then
         assertThat(foundParties).hasSize(1);
         assertThat(foundParties).contains(testPerson);
-        verify(partyJpaRepository).findByPartyType(partyType);
+        verify(partyJpaRepository).findByPartyType("PERSON");
     }
 
     @Test
@@ -282,14 +282,14 @@ class PartyRepositoryImplTest {
         // Given
         PartyType partyType = new PartyType();
         partyType.setDescription("PERSON");
-        when(partyJpaRepository.countByPartyType(partyType)).thenReturn(5L);
+        when(partyJpaRepository.countByPartyType("PERSON")).thenReturn(5L);
 
         // When
         long count = partyRepository.countByType(partyType);
 
         // Then
         assertThat(count).isEqualTo(5L);
-        verify(partyJpaRepository).countByPartyType(partyType);
+        verify(partyJpaRepository).countByPartyType("PERSON");
     }
 
     @Test

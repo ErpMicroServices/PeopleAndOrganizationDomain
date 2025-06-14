@@ -16,7 +16,7 @@ import java.util.UUID;
 @Repository
 public interface PartyJpaRepository extends JpaRepository<Party, UUID> {
     
-    List<Party> findByPartyType(PartyType partyType);
+    List<Party> findByPartyType(String partyType);
     
     @Query("SELECT DISTINCT p FROM Party p JOIN p.roles r WHERE r.roleType.description = :roleDescription AND r.thruDate IS NULL")
     List<Party> findByActiveRole(@Param("roleDescription") String roleDescription);
@@ -36,5 +36,5 @@ public interface PartyJpaRepository extends JpaRepository<Party, UUID> {
     @Query("SELECT DISTINCT p FROM Party p JOIN p.classifications c WHERE c.classificationType.description = :typeDescription AND c.value = :value AND c.thruDate IS NULL")
     List<Party> findByClassification(@Param("typeDescription") String typeDescription, @Param("value") String value);
     
-    long countByPartyType(PartyType partyType);
+    long countByPartyType(String partyType);
 }

@@ -10,11 +10,13 @@ import java.util.UUID;
 @DiscriminatorValue("EMAIL")
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@EqualsAndHashCode(callSuper = true)
 public class EmailAddress extends ContactMechanism {
+    
+    public EmailAddress() {
+        super();
+        setContactMechanismType("EMAIL");
+    }
     
     @Column(name = "email_address", nullable = false)
     private String emailAddress;

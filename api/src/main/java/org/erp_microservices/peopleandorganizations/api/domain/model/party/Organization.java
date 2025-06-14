@@ -12,10 +12,13 @@ import java.util.UUID;
 @DiscriminatorValue("ORGANIZATION")
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 public class Organization extends Party {
+    
+    public Organization() {
+        super();
+        setPartyType("ORGANIZATION");
+    }
     
     @Column(name = "organization_name")
     private String name;
@@ -46,7 +49,7 @@ public class Organization extends Party {
                        String name, String tradingName, String registrationNumber,
                        LocalDate establishedDate, String taxIdNumber, Integer numberOfEmployees,
                        String industry) {
-        super(id, partyTypeRef, partyType, comment, roles, names, identifications, classifications);
+        super(id, partyTypeRef, "ORGANIZATION", comment, roles, names, identifications, classifications);
         this.name = name;
         this.tradingName = tradingName;
         this.registrationNumber = registrationNumber;

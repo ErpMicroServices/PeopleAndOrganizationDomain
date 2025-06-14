@@ -32,7 +32,7 @@ public class PartyRepositoryImpl implements PartyRepository {
     
     @Override
     public List<Party> findByType(PartyType partyType) {
-        return jpaRepository.findByPartyType(partyType);
+        return jpaRepository.findByPartyType(partyType.getDescription().toUpperCase());
     }
     
     @Override
@@ -83,7 +83,7 @@ public class PartyRepositoryImpl implements PartyRepository {
     
     @Override
     public long countByType(PartyType partyType) {
-        return jpaRepository.countByPartyType(partyType);
+        return jpaRepository.countByPartyType(partyType.getDescription().toUpperCase());
     }
     
     @Override

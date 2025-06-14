@@ -13,15 +13,19 @@ import java.util.UUID;
 @DiscriminatorColumn(name = "party_type", discriminatorType = DiscriminatorType.STRING)
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public abstract class Party {
+    
+    public Party() {
+        this.roles = new ArrayList<>();
+        this.names = new ArrayList<>(); 
+        this.identifications = new ArrayList<>();
+        this.classifications = new ArrayList<>();
+    }
     
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
-    @EqualsAndHashCode.Include
     private UUID id;
     
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -46,48 +50,97 @@ public abstract class Party {
     @OneToMany(mappedBy = "party", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PartyClassification> classifications = new ArrayList<>();
     
+    @PostLoad
+    private void initializeCollections() {
+        if (roles == null) roles = new ArrayList<>();
+        if (names == null) names = new ArrayList<>();
+        if (identifications == null) identifications = new ArrayList<>();
+        if (classifications == null) classifications = new ArrayList<>();
+    }
+    
     public boolean hasRole(PartyRoleType roleType) {
-        return roles.stream()
+        return getRoles().stream()
                 .anyMatch(role -> role.isActive() && role.getRoleType().equals(roleType));
     }
     
     public PartyName getCurrentName(NameType nameType) {
-        return names.stream()
+        return getNames().stream()
                 .filter(name -> name.isActive() && name.getNameType().equals(nameType))
                 .findFirst()
                 .orElse(null);
     }
     
     public List<PartyRole> getActiveRoles() {
-        return roles.stream()
+        return getRoles().stream()
                 .filter(PartyRole::isActive)
                 .toList();
     }
     
     public void addRole(PartyRole role) {
         if (!hasRole(role.getRoleType())) {
-            roles.add(role);
+            getRoles().add(role);
         }
     }
     
     public void removeRole(PartyRoleType roleType) {
-        roles.stream()
+        getRoles().stream()
                 .filter(role -> role.getRoleType().equals(roleType) && role.isActive())
                 .forEach(PartyRole::expire);
     }
     
+    public List<PartyRole> getRoles() {
+        if (roles == null) {
+            roles = new ArrayList<>();
+        }
+        return roles;
+    }
+    
+    public List<PartyName> getNames() {
+        if (names == null) {
+            names = new ArrayList<>();
+        }
+        return names;
+    }
+    
+    public List<PartyIdentification> getIdentifications() {
+        if (identifications == null) {
+            identifications = new ArrayList<>();
+        }
+        return identifications;
+    }
+    
+    public List<PartyClassification> getClassifications() {
+        if (classifications == null) {
+            classifications = new ArrayList<>();
+        }
+        return classifications;
+    }
+    
     public void addPartyRole(PartyRole partyRole) {
-        roles.add(partyRole);
+        getRoles().add(partyRole);
         partyRole.setParty(this);
     }
     
     public void addPartyIdentification(PartyIdentification identification) {
-        identifications.add(identification);
+        getIdentifications().add(identification);
         identification.setParty(this);
     }
     
     public void addPartyClassification(PartyClassification classification) {
-        classifications.add(classification);
+        getClassifications().add(classification);
         classification.setParty(this);
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Party party = (Party) o;
+        return java.util.Objects.equals(id, party.id);
+    }
+    
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(id);
     }
 }
