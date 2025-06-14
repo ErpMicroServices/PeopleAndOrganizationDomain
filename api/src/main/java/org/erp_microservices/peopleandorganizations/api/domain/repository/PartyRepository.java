@@ -1,6 +1,8 @@
 package org.erp_microservices.peopleandorganizations.api.domain.repository;
 
 import org.erp_microservices.peopleandorganizations.api.domain.model.party.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,4 +35,12 @@ public interface PartyRepository {
     long count();
     
     long countByType(PartyType partyType);
+    
+    void deleteAll();
+    
+    List<Party> findAll();
+    
+    Page<Party> findAll(Pageable pageable);
+    
+    List<Party> saveAll(Iterable<Party> parties);
 }

@@ -12,10 +12,13 @@ import java.util.UUID;
 @DiscriminatorValue("PERSON")
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 public class Person extends Party {
+    
+    public Person() {
+        super();
+        setPartyType("PERSON");
+    }
     
     @Column(name = "first_name")
     private String firstName;
@@ -46,7 +49,7 @@ public class Person extends Party {
                   List<PartyClassification> classifications,
                   String firstName, String middleName, String lastName,
                   String title, String suffix, LocalDate birthDate, GenderType genderType) {
-        super(id, partyTypeRef, partyType, comment, roles, names, identifications, classifications);
+        super(id, partyTypeRef, "PERSON", comment, roles, names, identifications, classifications);
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;

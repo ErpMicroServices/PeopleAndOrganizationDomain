@@ -1,0 +1,93 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+# Default settings for all files
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Java files
+[*.java]
+indent_style = space
+indent_size = 4
+continuation_indent_size = 8
+
+# Gradle files
+[*.gradle]
+indent_style = space
+indent_size = 4
+
+# Gradle Kotlin DSL files
+[*.gradle.kts]
+indent_style = space
+indent_size = 4
+
+# Properties files
+[*.properties]
+indent_style = space
+indent_size = 2
+
+# XML files (including pom.xml, checkstyle.xml, etc.)
+[*.xml]
+indent_style = space
+indent_size = 4
+
+# YAML files
+[*.{yml,yaml}]
+indent_style = space
+indent_size = 2
+
+# JSON files
+[*.json]
+indent_style = space
+indent_size = 2
+
+# JavaScript/TypeScript files
+[*.{js,jsx,ts,tsx}]
+indent_style = space
+indent_size = 2
+
+# CSS/SCSS files
+[*.{css,scss}]
+indent_style = space
+indent_size = 2
+
+# HTML files
+[*.html]
+indent_style = space
+indent_size = 2
+
+# SQL files
+[*.sql]
+indent_style = space
+indent_size = 2
+
+# Markdown files
+[*.md]
+trim_trailing_whitespace = false
+indent_style = space
+indent_size = 2
+
+# Shell scripts
+[*.sh]
+indent_style = space
+indent_size = 2
+
+# Dockerfile
+[Dockerfile]
+indent_style = space
+indent_size = 4
+
+# Git configuration files
+[.git*]
+indent_style = space
+indent_size = 2
+
+# GitHub Actions workflows
+[.github/workflows/*.{yml,yaml}]
+indent_style = space
+indent_size = 2

@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -109,7 +110,7 @@ class PartyTypeRepositoryTest {
     void shouldDeletePartyType() {
         // Given
         PartyType savedType = entityManager.persistAndFlush(personType);
-        Long typeId = savedType.getId();
+        UUID typeId = savedType.getId();
 
         // When
         partyTypeRepository.deleteById(typeId);
@@ -144,7 +145,7 @@ class PartyTypeRepositoryTest {
 
         // When
         boolean exists = partyTypeRepository.existsById(savedType.getId());
-        boolean notExists = partyTypeRepository.existsById(999L);
+        boolean notExists = partyTypeRepository.existsById(UUID.randomUUID());
 
         // Then
         assertThat(exists).isTrue();

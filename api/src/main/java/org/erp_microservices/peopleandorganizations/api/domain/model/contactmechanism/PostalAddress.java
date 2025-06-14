@@ -10,11 +10,13 @@ import java.util.UUID;
 @DiscriminatorValue("POSTAL_ADDRESS")
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@EqualsAndHashCode(callSuper = true)
 public class PostalAddress extends ContactMechanism {
+    
+    public PostalAddress() {
+        super();
+        setContactMechanismType("POSTAL_ADDRESS");
+    }
     
     @Column(name = "address1", nullable = false)
     private String address1;

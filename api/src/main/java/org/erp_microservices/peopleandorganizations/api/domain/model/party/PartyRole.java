@@ -13,13 +13,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class PartyRole {
     
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
-    @EqualsAndHashCode.Include
     private UUID id;
     
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -43,7 +41,7 @@ public class PartyRole {
     
     public boolean isActive(LocalDate asOfDate) {
         return !fromDate.isAfter(asOfDate) && 
-               (thruDate == null || !thruDate.isBefore(asOfDate));
+               (thruDate == null || thruDate.isAfter(asOfDate));
     }
     
     public boolean isActiveOn(LocalDate date) {
@@ -59,5 +57,18 @@ public class PartyRole {
         if (thruDate == null || thruDate.isAfter(expirationDate)) {
             thruDate = expirationDate;
         }
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PartyRole partyRole = (PartyRole) o;
+        return java.util.Objects.equals(id, partyRole.id);
+    }
+    
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(id);
     }
 }

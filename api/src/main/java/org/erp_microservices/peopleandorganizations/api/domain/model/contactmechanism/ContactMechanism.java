@@ -13,13 +13,11 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public abstract class ContactMechanism {
     
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
-    @EqualsAndHashCode.Include
     private UUID id;
     
     @Column(name = "contact_mechanism_type", insertable = false, updatable = false)
@@ -27,4 +25,17 @@ public abstract class ContactMechanism {
     
     @Column(name = "comment", columnDefinition = "TEXT")
     private String comment;
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ContactMechanism that = (ContactMechanism) o;
+        return java.util.Objects.equals(id, that.id);
+    }
+    
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(id);
+    }
 }

@@ -2,6 +2,10 @@ spring:
   application:
     name: people-and-organizations-api
   
+  # Make Spring Cloud Config optional
+  config:
+    import: optional:configserver:http://localhost:8888
+  
   datasource:
     url: jdbc:postgresql://localhost:5432/people_and_organizations
     username: postgres

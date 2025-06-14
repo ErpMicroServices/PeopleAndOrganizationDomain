@@ -39,7 +39,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ env.JAVA_VERSION }}
-          distribution: 'eclipse-temurin'
+          distribution: 'temurin'
 
       - name: Cache Gradle dependencies
         uses: gradle/actions/setup-gradle@v4
@@ -237,11 +237,9 @@ jobs:
     
     strategy:
       matrix:
-        environment: [staging, production]
-        exclude:
+        include:
+          - environment: staging
           - environment: production
-            # Only exclude production if not a release
-            ${{ github.event_name != 'release' }}
 
     environment:
       name: ${{ matrix.environment }}
@@ -254,7 +252,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: ${{ env.JAVA_VERSION }}
-          distribution: 'eclipse-temurin'
+          distribution: 'temurin'
 
       - name: Cache Gradle dependencies
         uses: gradle/actions/setup-gradle@v4

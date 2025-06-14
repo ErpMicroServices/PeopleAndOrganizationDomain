@@ -61,6 +61,7 @@ class PartyJpaRepositoryTest {
                 .genderType(GenderType.MALE)
                 .build();
         testPerson.setPartyType("PERSON");
+        testPerson.setPartyTypeRef(personType);
 
         // Create test organization
         testOrganization = Organization.builder()
@@ -70,6 +71,7 @@ class PartyJpaRepositoryTest {
                 .taxIdNumber("TAX987654")
                 .build();
         testOrganization.setPartyType("ORGANIZATION");
+        testOrganization.setPartyTypeRef(organizationType);
     }
 
     @Test
@@ -111,8 +113,8 @@ class PartyJpaRepositoryTest {
         entityManager.persistAndFlush(testOrganization);
 
         // When
-        List<Party> persons = partyJpaRepository.findByPartyType(personType);
-        List<Party> organizations = partyJpaRepository.findByPartyType(organizationType);
+        List<Party> persons = partyJpaRepository.findByPartyType("PERSON");
+        List<Party> organizations = partyJpaRepository.findByPartyType("ORGANIZATION");
 
         // Then
         assertThat(persons).hasSize(1);
@@ -125,6 +127,28 @@ class PartyJpaRepositoryTest {
     @DisplayName("Should find by name containing")
     void shouldFindByNameContaining() {
         // Given
+        NameType legalNameType = new NameType();
+        legalNameType.setDescription("Legal Name");
+        legalNameType = entityManager.persistAndFlush(legalNameType);
+        
+        entityManager.persistAndFlush(testPerson);
+        entityManager.persistAndFlush(testOrganization);
+        
+        // Add party names
+        PartyName personName = PartyName.builder()
+                .party(testPerson)
+                .nameType(legalNameType)
+                .name("John Doe")
+                .build();
+        testPerson.getNames().add(personName);
+        
+        PartyName orgName = PartyName.builder()
+                .party(testOrganization)
+                .nameType(legalNameType)
+                .name("Acme Corporation")
+                .build();
+        testOrganization.getNames().add(orgName);
+        
         entityManager.persistAndFlush(testPerson);
         entityManager.persistAndFlush(testOrganization);
 
@@ -149,6 +173,7 @@ class PartyJpaRepositoryTest {
                 .lastName("Doe")
                 .build();
         anotherPerson.setPartyType("PERSON");
+        anotherPerson.setPartyTypeRef(personType);
         entityManager.persistAndFlush(anotherPerson);
 
         // When
@@ -168,6 +193,7 @@ class PartyJpaRepositoryTest {
                 .name("Acme Industries")
                 .build();
         anotherOrg.setPartyType("ORGANIZATION");
+        anotherOrg.setPartyTypeRef(organizationType);
         entityManager.persistAndFlush(anotherOrg);
 
         // When
@@ -209,11 +235,12 @@ class PartyJpaRepositoryTest {
                 .lastName("Smith")
                 .build();
         anotherPerson.setPartyType("PERSON");
+        anotherPerson.setPartyTypeRef(personType);
         entityManager.persistAndFlush(anotherPerson);
 
         // When
-        long personCount = partyJpaRepository.countByPartyType(personType);
-        long orgCount = partyJpaRepository.countByPartyType(organizationType);
+        long personCount = partyJpaRepository.countByPartyType("PERSON");
+        long orgCount = partyJpaRepository.countByPartyType("ORGANIZATION");
 
         // Then
         assertThat(personCount).isEqualTo(2);
@@ -256,7 +283,7 @@ class PartyJpaRepositoryTest {
 
         PartyClassification classification = new PartyClassification();
         classification.setParty(testPerson);
-        classification.setPartyClassificationType(vipType);
+        classification.setClassificationType(vipType);
         classification.setValue("Gold");
         classification.setFromDate(LocalDate.now());
         

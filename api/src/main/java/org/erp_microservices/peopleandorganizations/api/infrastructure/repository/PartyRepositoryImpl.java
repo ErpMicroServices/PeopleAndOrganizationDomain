@@ -3,13 +3,14 @@ package org.erp_microservices.peopleandorganizations.api.infrastructure.reposito
 import lombok.RequiredArgsConstructor;
 import org.erp_microservices.peopleandorganizations.api.domain.model.party.*;
 import org.erp_microservices.peopleandorganizations.api.domain.repository.PartyRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -31,7 +32,7 @@ public class PartyRepositoryImpl implements PartyRepository {
     
     @Override
     public List<Party> findByType(PartyType partyType) {
-        return jpaRepository.findByPartyType(partyType);
+        return jpaRepository.findByPartyType(partyType.getDescription().toUpperCase());
     }
     
     @Override
@@ -46,18 +47,12 @@ public class PartyRepositoryImpl implements PartyRepository {
     
     @Override
     public List<Person> findPersonsByLastName(String lastName) {
-        return jpaRepository.findPersonsByLastName(lastName).stream()
-                .filter(party -> party instanceof Person)
-                .map(party -> (Person) party)
-                .collect(Collectors.toList());
+        return jpaRepository.findPersonsByLastName(lastName);
     }
     
     @Override
     public List<Organization> findOrganizationsByName(String name) {
-        return jpaRepository.findOrganizationsByName(name).stream()
-                .filter(party -> party instanceof Organization)
-                .map(party -> (Organization) party)
-                .collect(Collectors.toList());
+        return jpaRepository.findOrganizationsByName(name);
     }
     
     @Override
@@ -88,6 +83,28 @@ public class PartyRepositoryImpl implements PartyRepository {
     
     @Override
     public long countByType(PartyType partyType) {
-        return jpaRepository.countByPartyType(partyType);
+        return jpaRepository.countByPartyType(partyType.getDescription().toUpperCase());
+    }
+    
+    @Override
+    @Transactional
+    public void deleteAll() {
+        jpaRepository.deleteAll();
+    }
+    
+    @Override
+    public List<Party> findAll() {
+        return jpaRepository.findAll();
+    }
+    
+    @Override
+    public Page<Party> findAll(Pageable pageable) {
+        return jpaRepository.findAll(pageable);
+    }
+    
+    @Override
+    @Transactional
+    public List<Party> saveAll(Iterable<Party> parties) {
+        return jpaRepository.saveAll(parties);
     }
 }

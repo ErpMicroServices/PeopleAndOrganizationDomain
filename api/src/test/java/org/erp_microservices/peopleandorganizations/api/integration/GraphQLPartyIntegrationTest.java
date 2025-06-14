@@ -19,7 +19,11 @@ import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, 
+    properties = {
+        "spring.cloud.vault.enabled=false",
+        "spring.cloud.config.enabled=false"
+    })
 @AutoConfigureHttpGraphQlTester
 @Testcontainers
 @Transactional
@@ -37,6 +41,7 @@ public class GraphQLPartyIntegrationTest {
         registry.add("spring.datasource.url", postgres::getJdbcUrl);
         registry.add("spring.datasource.username", postgres::getUsername);
         registry.add("spring.datasource.password", postgres::getPassword);
+        registry.add("spring.jpa.hibernate.ddl-auto", () -> "create-drop");
     }
 
     @Autowired

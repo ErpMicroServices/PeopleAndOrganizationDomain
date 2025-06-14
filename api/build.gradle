@@ -8,8 +8,9 @@ group = 'org.erp_microservices.peopleandorganizations'
 version = '0.0.1-SNAPSHOT'
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 
@@ -60,5 +61,20 @@ dependencyManagement {
 }
 
 test {
-    useJUnitPlatform()
+    useJUnitPlatform {
+        excludeTags 'integration'
+    }
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
+// Configure the existing integrationTest task
+integrationTest {
+    useJUnitPlatform {
+        includeTags 'integration'
+    }
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }
