@@ -278,8 +278,8 @@ jobs:
       - name: Build Docker image
         uses: docker/build-push-action@v5
         with:
-          context: ./api
-          file: ./api/Dockerfile
+          context: .
+          file: ./Dockerfile
           push: false
           tags: people-organizations-api:test
           cache-from: type=gha
