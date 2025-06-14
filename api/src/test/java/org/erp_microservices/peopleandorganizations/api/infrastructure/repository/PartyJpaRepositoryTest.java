@@ -256,7 +256,7 @@ class PartyJpaRepositoryTest {
 
         PartyClassification classification = new PartyClassification();
         classification.setParty(testPerson);
-        classification.setPartyClassificationType(vipType);
+        classification.setClassificationType(vipType);
         classification.setValue("Gold");
         classification.setFromDate(LocalDate.now());
         
