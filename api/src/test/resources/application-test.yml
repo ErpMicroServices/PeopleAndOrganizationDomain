@@ -1,0 +1,62 @@
+spring:
+  application:
+    name: people-and-organizations-api-test
+  
+  # Disable Spring Cloud Config for tests
+  cloud:
+    config:
+      enabled: false
+    vault:
+      enabled: false
+  
+  # Optional config import to prevent failures
+  config:
+    import: "optional:configserver:"
+  
+  # Test database configuration - uses PostgreSQL via Testcontainers
+  datasource:
+    url: jdbc:tc:postgresql:15-alpine:///testdb
+    username: test
+    password: test
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: false
+        jdbc:
+          time_zone: UTC
+    open-in-view: false
+    
+  graphql:
+    graphiql:
+      enabled: false
+    path: /graphql
+    
+  # Disable security for tests
+  security:
+    oauth2:
+      client:
+        registration:
+          cognito:
+            client-id: test-client-id
+            client-secret: test-client-secret
+            scope: openid,profile,email
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+        provider:
+          cognito:
+            authorization-uri: https://test.auth.region.amazoncognito.com/oauth2/authorize
+            token-uri: https://test.auth.region.amazoncognito.com/oauth2/token
+            user-info-uri: https://test.auth.region.amazoncognito.com/oauth2/userInfo
+            jwk-set-uri: https://cognito-idp.region.amazonaws.com/test/.well-known/jwks.json
+
+# Test profile specific configuration
+logging:
+  level:
+    org.springframework: INFO
+    org.hibernate: INFO
