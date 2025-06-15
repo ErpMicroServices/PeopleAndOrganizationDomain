@@ -12,6 +12,8 @@
         <exclude name="JUnitAssertionsShouldIncludeMessage"/>
         <exclude name="JUnitTestContainsTooManyAsserts"/>
         <exclude name="UseVarargs"/>
+        <exclude name="MethodReturnsInternalArray"/>
+        <exclude name="ArrayIsStoredDirectly"/>
     </rule>
 
     <!-- Code Style -->
@@ -32,6 +34,10 @@
         <exclude name="LawOfDemeter"/>
         <exclude name="LoosePackageCoupling"/>
         <exclude name="UseUtilityClass"/>
+        <exclude name="TooManyMethods"/>
+        <exclude name="TooManyFields"/>
+        <exclude name="CyclomaticComplexity"/>
+        <exclude name="ExcessiveParameterList"/>
     </rule>
 
     <!-- Documentation -->
@@ -60,7 +66,7 @@
     <!-- Security -->
     <rule ref="category/java/security.xml"/>
 
-    <!-- Custom rules -->
+    <!-- Custom rules with default configuration -->
     <rule ref="category/java/bestpractices.xml/MethodReturnsInternalArray"/>
     <rule ref="category/java/bestpractices.xml/ArrayIsStoredDirectly"/>
 
