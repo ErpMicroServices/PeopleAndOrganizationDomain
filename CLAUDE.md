@@ -81,9 +81,40 @@ PeopleAndOrganizationDomain/
 
 ### Environment Setup
 
+#### Java Configuration
+
+This project requires Java 21. There are several ways to configure it:
+
+**Option 1: Set JAVA_HOME environment variable (recommended)**
 ```bash
-# Ensure Java 21 is available (project uses gradle.properties to configure)
-java -version  # Should show Java 21 or compatible
+# macOS/Linux
+export JAVA_HOME=/path/to/java21
+
+# Windows
+set JAVA_HOME=C:\path\to\java21
+```
+
+**Option 2: Use gradle.properties (for local development only)**
+```bash
+# Copy the template
+cp gradle.properties.template gradle.properties
+
+# Edit gradle.properties and uncomment/set:
+# org.gradle.java.home=/path/to/java21
+```
+
+**Common Java 21 locations:**
+- macOS (SDKMAN): `~/.sdkman/candidates/java/21.x.x-vendor`
+- macOS (Homebrew): `/opt/homebrew/opt/openjdk@21`
+- macOS (Oracle/OpenJDK): `/Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home`
+- Linux: `/usr/lib/jvm/java-21-openjdk`
+- Windows: `C:\Program Files\Java\jdk-21`
+
+**Note:** The gradle.properties file is tracked by git and should NOT contain machine-specific paths. Use environment variables or local overrides instead.
+
+```bash
+# Verify Java version
+java -version  # Should show Java 21
 
 # Clone and setup
 git clone <repository>
