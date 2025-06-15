@@ -262,6 +262,16 @@ repos:
         pass_filenames: false
         stages: [pre-push]
 
+      # Run integration tests before push
+      - id: gradle-integration-tests-push
+        name: Gradle Integration Tests (pre-push)
+        entry: .pre-commit-scripts/run-integration-tests.sh
+        language: system
+        files: \.java$
+        pass_filenames: false
+        stages: [pre-push]
+        always_run: true
+
       # Run code quality checks before push
       - id: gradle-quality-push
         name: Gradle Code Quality (pre-push)
