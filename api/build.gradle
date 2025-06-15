@@ -51,6 +51,13 @@ dependencies {
     testImplementation 'org.testcontainers:vault'
     testImplementation 'org.assertj:assertj-core'
     testImplementation 'org.mockito:mockito-junit-jupiter'
+
+    // Cucumber BDD Testing Dependencies
+    testImplementation 'io.cucumber:cucumber-java:7.18.1'
+    testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.18.1'
+    testImplementation 'io.cucumber:cucumber-spring:7.18.1'
+    testImplementation 'org.junit.platform:junit-platform-suite-api:1.10.0'
+
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
@@ -69,12 +76,26 @@ test {
     }
 }
 
-// Configure the existing integrationTest task
-integrationTest {
+// integrationTest task is configured in the root build.gradle
+
+// BDD Test task using Cucumber
+task bddTest(type: Test) {
+    description = 'Runs BDD tests using Cucumber.'
+    group = 'verification'
+
     useJUnitPlatform {
-        includeTags 'integration'
+        includeTags 'bdd'
     }
+
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    shouldRunAfter test, integrationTest
+
     testLogging {
         events "passed", "skipped", "failed"
+        showStandardStreams = true
     }
+
+    systemProperty 'cucumber.junit-platform.naming-strategy', 'long'
+    systemProperty 'cucumber.plugin', 'pretty,html:build/reports/cucumber,json:build/reports/cucumber/cucumber.json'
 }
