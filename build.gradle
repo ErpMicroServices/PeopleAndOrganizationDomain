@@ -36,7 +36,8 @@ subprojects {
         spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.13.0'
     }
 
-    test {
+    // Configure test task only if it exists
+    tasks.withType(Test) {
         useJUnitPlatform()
         finalizedBy jacocoTestReport
     }
