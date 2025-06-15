@@ -1,0 +1,30 @@
+# Template for gradle.properties
+# Copy this file to gradle.properties and customize for your local environment
+
+# Java Configuration
+# -----------------
+# Option 1: Set JAVA_HOME environment variable (recommended)
+# export JAVA_HOME=/path/to/java21
+#
+# Option 2: Configure in gradle.properties (local only)
+# org.gradle.java.home=/path/to/java21/home
+#
+# Common Java 21 locations:
+# macOS (SDKMAN): ~/.sdkman/candidates/java/21.x.x-vendor
+# macOS (Homebrew): /opt/homebrew/opt/openjdk@21
+# macOS (Oracle/OpenJDK): /Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home
+# Linux: /usr/lib/jvm/java-21-openjdk
+# Windows: C:\\Program Files\\Java\\jdk-21
+
+# JVM Arguments
+org.gradle.jvmargs=-Xmx2048m -XX:MaxMetaspaceSize=512m
+
+# Build Cache (optional, improves build performance)
+# org.gradle.caching=true
+
+# Parallel execution (optional, improves build performance)
+# org.gradle.parallel=true
+
+# Daemon settings (optional)
+# org.gradle.daemon=true
+# org.gradle.daemon.idletimeout=3600000
