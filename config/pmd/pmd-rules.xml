@@ -42,8 +42,6 @@
 
     <!-- Error Prone -->
     <rule ref="category/java/errorprone.xml">
-        <exclude name="BeanMembersShouldSerialize"/>
-        <exclude name="DataflowAnomalyAnalysis"/>
         <exclude name="NullAssignment"/>
         <exclude name="UseProperClassLoader"/>
         <exclude name="AvoidFieldNameMatchingMethodName"/>
