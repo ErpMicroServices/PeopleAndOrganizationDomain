@@ -103,8 +103,9 @@ if ! docker info >/dev/null 2>&1; then
   exit 1
 fi
 
-# Run integration tests with a timeout
-timeout 300 ./gradlew integrationTest --no-daemon || {
+# Run integration tests with a timeout (if available)
+if command -v timeout >/dev/null 2>&1; then
+  timeout 300 ./gradlew integrationTest --no-daemon || {
   exit_code=$?
   if [ $exit_code -eq 124 ]; then
     echo ""
@@ -122,7 +123,22 @@ timeout 300 ./gradlew integrationTest --no-daemon || {
   echo ""
   echo "🚫 To bypass this check temporarily: git push --no-verify"
   exit $exit_code
-}
+  }
+else
+  # No timeout command available (macOS), run without timeout
+  ./gradlew integrationTest --no-daemon || {
+    echo ""
+    echo "❌ ERROR: Integration tests failed!"
+    echo ""
+    echo "💡 Tips:"
+    echo "  - Check test output above for specific failures"
+    echo "  - Ensure Docker is running for Testcontainers"
+    echo "  - Run './gradlew integrationTest' locally to debug"
+    echo ""
+    echo "🚫 To bypass this check temporarily: git push --no-verify"
+    exit 1
+  }
+fi
 
 echo ""
 echo "✅ Integration tests passed!"
