@@ -384,11 +384,14 @@ pre-commit install --hook-type pre-push
 - Unit tests
 - Integration tests (with Testcontainers/PostgreSQL)
 - Code quality checks (Checkstyle, PMD)
+- SpotBugs static analysis (includes security checks via findsecbugs)
 
 #### Prerequisites for Pre-push Hooks
 
 - **Docker must be running** for integration tests (uses Testcontainers)
 - Integration tests may take up to 5 minutes
+- SpotBugs analysis focuses on high-priority bugs only
+- Security vulnerabilities detected via findsecbugs plugin
 - To bypass hooks in emergencies: `git push --no-verify`
 
 #### Running Hooks Manually
