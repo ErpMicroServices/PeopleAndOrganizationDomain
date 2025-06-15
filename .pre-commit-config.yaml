@@ -371,6 +371,16 @@ repos:
         pass_filenames: false
         stages: [pre-push]
 
+      # Run SpotBugs static analysis before push
+      - id: gradle-spotbugs-push
+        name: SpotBugs Static Analysis (pre-push)
+        entry: .pre-commit-scripts/run-spotbugs.sh
+        language: system
+        files: \.java$
+        pass_filenames: false
+        stages: [pre-push]
+        always_run: true
+
 # Optional: Configure specific file patterns to exclude
 exclude: |
   (?x)^(
