@@ -382,7 +382,14 @@ pre-commit install --hook-type pre-push
 **Before push:**
 
 - Unit tests
+- Integration tests (with Testcontainers/PostgreSQL)
 - Code quality checks (Checkstyle, PMD)
+
+#### Prerequisites for Pre-push Hooks
+
+- **Docker must be running** for integration tests (uses Testcontainers)
+- Integration tests may take up to 5 minutes
+- To bypass hooks in emergencies: `git push --no-verify`
 
 #### Running Hooks Manually
 
@@ -392,6 +399,9 @@ pre-commit run --all-files
 
 # Run specific hook
 pre-commit run gradle-compile --all-files
+
+# Run integration tests manually
+pre-commit run gradle-integration-tests-push --all-files
 ```
 
 ### Building from Source
