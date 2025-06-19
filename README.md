@@ -385,6 +385,7 @@ pre-commit install --hook-type pre-push
 - Integration tests (with Testcontainers/PostgreSQL)
 - Code quality checks (Checkstyle, PMD)
 - SpotBugs static analysis (includes security checks via findsecbugs)
+- Test coverage validation (80% minimum threshold)
 
 #### Prerequisites for Pre-push Hooks
 
@@ -392,6 +393,8 @@ pre-commit install --hook-type pre-push
 - Integration tests may take up to 5 minutes
 - SpotBugs analysis focuses on high-priority bugs only
 - Security vulnerabilities detected via findsecbugs plugin
+- Test coverage must meet 80% minimum threshold
+- Coverage excludes DTOs, configs, and generated code
 - To bypass hooks in emergencies: `git push --no-verify`
 
 #### Running Hooks Manually

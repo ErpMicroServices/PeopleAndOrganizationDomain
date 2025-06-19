@@ -381,6 +381,16 @@ repos:
         stages: [pre-push]
         always_run: true
 
+      # Run test coverage validation before push
+      - id: gradle-coverage-check-push
+        name: Test Coverage Validation (pre-push)
+        entry: .pre-commit-scripts/run-coverage-check.sh
+        language: system
+        files: \.java$
+        pass_filenames: false
+        stages: [pre-push]
+        always_run: true
+
 # Optional: Configure specific file patterns to exclude
 exclude: |
   (?x)^(
