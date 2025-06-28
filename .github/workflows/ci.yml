@@ -55,6 +55,9 @@ jobs:
         run: ./gradlew test -x integrationTest --no-daemon
         env:
           SPRING_PROFILES_ACTIVE: test
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/testdb
+          SPRING_DATASOURCE_USERNAME: test
+          SPRING_DATASOURCE_PASSWORD: test  # pragma: allowlist secret
 
       - name: Run integration tests
         run: ./gradlew integrationTest --no-daemon
@@ -62,7 +65,7 @@ jobs:
           SPRING_PROFILES_ACTIVE: test
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/testdb
           SPRING_DATASOURCE_USERNAME: test
-          SPRING_DATASOURCE_PASSWORD: test  # pragma: allowlist secret
+          SPRING_DATASOURCE_PASSWORD: test  # pragma: allowlist secret  # pragma: allowlist secret
 
       - name: Generate test report
         run: ./gradlew jacocoTestReport --no-daemon
@@ -260,7 +263,7 @@ jobs:
           SPRING_PROFILES_ACTIVE: test
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/testdb
           SPRING_DATASOURCE_USERNAME: test
-          SPRING_DATASOURCE_PASSWORD: test  # pragma: allowlist secret
+          SPRING_DATASOURCE_PASSWORD: test  # pragma: allowlist secret  # pragma: allowlist secret
 
   # Job 6: Docker build and validation
   docker-build:
