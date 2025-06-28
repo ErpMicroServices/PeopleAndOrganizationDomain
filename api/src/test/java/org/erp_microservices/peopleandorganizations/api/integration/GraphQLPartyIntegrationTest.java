@@ -120,7 +120,7 @@ public class GraphQLPartyIntegrationTest {
                 .document(query)
                 .variable("id", personId)
                 .execute()
-                .path("person").pathDoesNotExist(); // Expecting null for non-existent ID
+                .path("person").valueIsNull(); // Expecting null for non-existent ID
     }
 
     @Test

@@ -1,5 +1,6 @@
 package org.erp_microservices.peopleandorganizations.api.integration;
 
+import org.erp_microservices.peopleandorganizations.api.domain.repository.PartyRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -27,9 +28,39 @@ public class GraphQLContactMechanismIntegrationTest {
     @Autowired
     private HttpGraphQlTester graphQlTester;
 
+    @Autowired
+    private PartyRepository partyRepository;
+
+    private String testPartyId;
+
     @BeforeEach
     void setUp() {
-        // Clean up test data
+        partyRepository.deleteAll();
+
+        // Create a test person to use in contact mechanism tests
+        String createPersonMutation = """
+            mutation CreatePerson($input: CreatePersonInput!) {
+                createPerson(input: $input) {
+                    id
+                }
+            }
+            """;
+
+        Object personInput = java.util.Map.of(
+                "firstName", "John",
+                "lastName", "Doe",
+                "middleName", "Michael",
+                "birthDate", "1990-01-15",
+                "genderType", "MALE"
+        );
+
+        testPartyId = graphQlTester
+                .document(createPersonMutation)
+                .variable("input", personInput)
+                .execute()
+                .path("createPerson.id")
+                .entity(String.class)
+                .get();
     }
 
     @Test
@@ -143,7 +174,7 @@ public class GraphQLContactMechanismIntegrationTest {
             }
             """;
 
-        String partyId = "550e8400-e29b-41d4-a716-446655440000";
+        String partyId = testPartyId;
 
         graphQlTester
                 .document(query)
@@ -182,7 +213,7 @@ public class GraphQLContactMechanismIntegrationTest {
             }
             """;
 
-        String partyId = "550e8400-e29b-41d4-a716-446655440000";
+        String partyId = testPartyId;
         String contactMechanismId = "550e8400-e29b-41d4-a716-446655440001";
 
         graphQlTester
@@ -196,14 +227,14 @@ public class GraphQLContactMechanismIntegrationTest {
 
     private Object addEmailInput() {
         return java.util.Map.of(
-                "partyId", "550e8400-e29b-41d4-a716-446655440000",
+                "partyId", testPartyId,
                 "emailAddress", "john.doe@example.com"
         );
     }
 
     private Object addPhoneInput() {
         return java.util.Map.of(
-                "partyId", "550e8400-e29b-41d4-a716-446655440000",
+                "partyId", testPartyId,
                 "countryCode", "1",
                 "areaCode", "555",
                 "phoneNumber", "123-4567"
@@ -212,7 +243,7 @@ public class GraphQLContactMechanismIntegrationTest {
 
     private Object addPostalAddressInput() {
         return java.util.Map.of(
-                "partyId", "550e8400-e29b-41d4-a716-446655440000",
+                "partyId", testPartyId,
                 "address1", "123 Main Street",
                 "address2", "",
                 "city", "Anytown",
