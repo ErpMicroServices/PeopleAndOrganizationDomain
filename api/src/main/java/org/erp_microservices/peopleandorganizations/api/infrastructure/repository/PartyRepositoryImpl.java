@@ -1,7 +1,13 @@
 package org.erp_microservices.peopleandorganizations.api.infrastructure.repository;
 
 import lombok.RequiredArgsConstructor;
-import org.erp_microservices.peopleandorganizations.api.domain.model.party.*;
+import org.erp_microservices.peopleandorganizations.api.domain.model.party.IdentificationType;
+import org.erp_microservices.peopleandorganizations.api.domain.model.party.Organization;
+import org.erp_microservices.peopleandorganizations.api.domain.model.party.Party;
+import org.erp_microservices.peopleandorganizations.api.domain.model.party.PartyClassificationType;
+import org.erp_microservices.peopleandorganizations.api.domain.model.party.PartyRoleType;
+import org.erp_microservices.peopleandorganizations.api.domain.model.party.PartyType;
+import org.erp_microservices.peopleandorganizations.api.domain.model.party.Person;
 import org.erp_microservices.peopleandorganizations.api.domain.repository.PartyRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -106,5 +112,10 @@ public class PartyRepositoryImpl implements PartyRepository {
     @Transactional
     public List<Party> saveAll(Iterable<Party> parties) {
         return jpaRepository.saveAll(parties);
+    }
+
+    @Override
+    public Page<Party> findByPartyType(String partyType, Pageable pageable) {
+        return jpaRepository.findByPartyType(partyType, pageable);
     }
 }

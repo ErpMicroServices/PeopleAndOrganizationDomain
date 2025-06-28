@@ -123,6 +123,22 @@ The Docker environment includes:
 - **LocalStack**: AWS services simulation (Cognito, S3, Secrets Manager)
 - **Nginx**: Reverse proxy (production only)
 
+### Quick Start with Helper Scripts
+
+```bash
+# Start essential dependencies (PostgreSQL only)
+./scripts/start-dependencies.sh
+
+# Start full development stack (PostgreSQL, Redis, LocalStack)
+./scripts/start-dependencies.sh --full
+
+# Run all tests with dependencies
+./scripts/run-tests.sh
+
+# Stop all dependencies
+./scripts/stop-dependencies.sh
+```
+
 ### Development Commands
 
 ```bash
@@ -131,6 +147,9 @@ docker compose up
 
 # Start services in background
 docker compose up -d
+
+# Start minimal test dependencies only
+docker compose -f docker-compose.test.yml up -d
 
 # View logs
 docker compose logs -f

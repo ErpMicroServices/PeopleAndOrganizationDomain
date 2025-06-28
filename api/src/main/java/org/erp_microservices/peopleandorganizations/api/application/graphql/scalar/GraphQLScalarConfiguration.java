@@ -4,7 +4,11 @@ import graphql.GraphQLContext;
 import graphql.execution.CoercedVariables;
 import graphql.language.StringValue;
 import graphql.language.Value;
-import graphql.schema.*;
+import graphql.schema.Coercing;
+import graphql.schema.CoercingParseLiteralException;
+import graphql.schema.CoercingParseValueException;
+import graphql.schema.CoercingSerializeException;
+import graphql.schema.GraphQLScalarType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.graphql.execution.RuntimeWiringConfigurer;
@@ -48,7 +52,9 @@ public class GraphQLScalarConfiguration {
                     }
 
                     @Override
-                    public UUID parseLiteral(Value<?> input, CoercedVariables variables, GraphQLContext graphQLContext, Locale locale) throws CoercingParseLiteralException {
+                    public UUID parseLiteral(Value<?> input, CoercedVariables variables,
+                                            GraphQLContext graphQLContext, Locale locale)
+                            throws CoercingParseLiteralException {
                         if (input instanceof StringValue) {
                             try {
                                 return UUID.fromString(((StringValue) input).getValue());
@@ -91,10 +97,13 @@ public class GraphQLScalarConfiguration {
                     }
 
                     @Override
-                    public LocalDate parseLiteral(Value<?> input, CoercedVariables variables, GraphQLContext graphQLContext, Locale locale) throws CoercingParseLiteralException {
+                    public LocalDate parseLiteral(Value<?> input, CoercedVariables variables,
+                                                 GraphQLContext graphQLContext, Locale locale)
+                            throws CoercingParseLiteralException {
                         if (input instanceof StringValue) {
                             try {
-                                return LocalDate.parse(((StringValue) input).getValue(), DateTimeFormatter.ISO_LOCAL_DATE);
+                                return LocalDate.parse(((StringValue) input).getValue(),
+                                        DateTimeFormatter.ISO_LOCAL_DATE);
                             } catch (DateTimeParseException e) {
                                 throw new CoercingParseLiteralException("Invalid date format: " + input);
                             }
@@ -134,10 +143,13 @@ public class GraphQLScalarConfiguration {
                     }
 
                     @Override
-                    public LocalDateTime parseLiteral(Value<?> input, CoercedVariables variables, GraphQLContext graphQLContext, Locale locale) throws CoercingParseLiteralException {
+                    public LocalDateTime parseLiteral(Value<?> input, CoercedVariables variables,
+                                                     GraphQLContext graphQLContext, Locale locale)
+                            throws CoercingParseLiteralException {
                         if (input instanceof StringValue) {
                             try {
-                                return LocalDateTime.parse(((StringValue) input).getValue(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+                                return LocalDateTime.parse(((StringValue) input).getValue(),
+                                        DateTimeFormatter.ISO_LOCAL_DATE_TIME);
                             } catch (DateTimeParseException e) {
                                 throw new CoercingParseLiteralException("Invalid datetime format: " + input);
                             }

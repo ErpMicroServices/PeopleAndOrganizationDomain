@@ -4,6 +4,8 @@ import org.erp_microservices.peopleandorganizations.api.domain.model.party.Organ
 import org.erp_microservices.peopleandorganizations.api.domain.model.party.Party;
 import org.erp_microservices.peopleandorganizations.api.domain.model.party.PartyType;
 import org.erp_microservices.peopleandorganizations.api.domain.model.party.Person;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,6 +19,8 @@ import java.util.UUID;
 public interface PartyJpaRepository extends JpaRepository<Party, UUID> {
 
     List<Party> findByPartyType(String partyType);
+
+    Page<Party> findByPartyType(String partyType, Pageable pageable);
 
     @Query("SELECT DISTINCT p FROM Party p JOIN p.roles r WHERE r.roleType.description = :roleDescription AND r.thruDate IS NULL")
     List<Party> findByActiveRole(@Param("roleDescription") String roleDescription);
