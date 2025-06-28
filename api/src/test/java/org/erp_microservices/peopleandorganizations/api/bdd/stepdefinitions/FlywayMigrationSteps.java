@@ -20,7 +20,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@TestPropertySource(locations = "classpath:application-test.yml")
+@TestPropertySource(locations = "classpath:application-flyway-test.yml")
 public class FlywayMigrationSteps {
 
     @Autowired

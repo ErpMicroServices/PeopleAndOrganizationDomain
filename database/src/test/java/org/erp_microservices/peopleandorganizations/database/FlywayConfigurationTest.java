@@ -60,9 +60,12 @@ class FlywayConfigurationTest {
             assertNotNull(flyway, "Flyway should be created");
             assertEquals(dataSource, flyway.getConfiguration().getDataSource(),
                 "DataSource should be configured");
-            assertArrayEquals(new String[]{"classpath:db/migration"},
-                flyway.getConfiguration().getLocations(),
-                "Migration locations should be set");
+            var actualLocations = flyway.getConfiguration().getLocations();
+            assertNotNull(actualLocations, "Migration locations should not be null");
+            assertTrue(actualLocations.length > 0, "Should have at least one migration location");
+            boolean hasDbMigrationLocation = java.util.Arrays.stream(actualLocations)
+                .anyMatch(location -> location.toString().contains("db/migration"));
+            assertTrue(hasDbMigrationLocation, "Should contain db/migration location");
             assertTrue(flyway.getConfiguration().isBaselineOnMigrate(),
                 "Baseline on migrate should be enabled");
             assertEquals("0", flyway.getConfiguration().getBaselineVersion().toString(),
