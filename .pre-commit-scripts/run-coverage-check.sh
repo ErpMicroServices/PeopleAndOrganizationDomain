@@ -33,11 +33,11 @@ echo "🐳 Starting test dependencies..."
 cd "$PROJECT_ROOT"
 
 # Start test dependencies using Docker Compose
-docker-compose -f docker-compose.test.yml up -d --wait
+docker compose -f docker-compose.test.yml up -d --wait
 
 # Wait for PostgreSQL to be ready
 echo "⏳ Waiting for PostgreSQL to be ready..."
-until docker-compose -f docker-compose.test.yml exec -T postgres pg_isready -U test_user -d test_db >/dev/null 2>&1; do
+until docker compose -f docker-compose.test.yml exec -T postgres pg_isready -U test_user -d test_db >/dev/null 2>&1; do
   echo "  Waiting for PostgreSQL..."
   sleep 2
 done
@@ -79,7 +79,7 @@ else
   echo ""
   echo "🚫 To bypass this check temporarily: git push --no-verify"
   # Clean up test dependencies even on failure
-  docker-compose -f docker-compose.test.yml down --volumes
+  docker compose -f docker-compose.test.yml down --volumes
   exit 1
 fi
 
@@ -108,7 +108,7 @@ if ./gradlew :api:jacocoTestCoverageVerification --no-daemon > /tmp/coverage-ver
   echo "   open api/build/reports/jacoco/test/html/index.html"
   # Clean up test dependencies
   echo "🧹 Cleaning up test dependencies..."
-  docker-compose -f docker-compose.test.yml down --volumes
+  docker compose -f docker-compose.test.yml down --volumes
 else
   echo "❌ ERROR: Coverage validation FAILED - below 80% threshold!"
   echo ""
@@ -125,6 +125,6 @@ else
   echo ""
   echo "🚫 To bypass this check temporarily: git push --no-verify"
   # Clean up test dependencies even on failure
-  docker-compose -f docker-compose.test.yml down --volumes
+  docker compose -f docker-compose.test.yml down --volumes
   exit 1
 fi
