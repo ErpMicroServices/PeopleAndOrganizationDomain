@@ -37,7 +37,7 @@ subprojects {
     }
 
     // Configure test task only if it exists
-    tasks.withType(Test) {
+    tasks.withType(Test).configureEach {
         useJUnitPlatform()
         finalizedBy jacocoTestReport
     }
