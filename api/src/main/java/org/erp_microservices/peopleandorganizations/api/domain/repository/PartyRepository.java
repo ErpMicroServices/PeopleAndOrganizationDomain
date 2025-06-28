@@ -43,4 +43,6 @@ public interface PartyRepository {
     Page<Party> findAll(Pageable pageable);
 
     List<Party> saveAll(Iterable<Party> parties);
+
+    Page<Party> findByPartyType(String partyType, Pageable pageable);
 }

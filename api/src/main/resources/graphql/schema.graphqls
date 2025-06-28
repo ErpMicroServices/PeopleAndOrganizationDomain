@@ -120,10 +120,20 @@ type PartyRelationship {
     id: ID!
     fromParty: Party!
     toParty: Party!
-    relationshipType: String!
+    relationshipType: PartyRelationshipType!
     fromDate: Date!
     thruDate: Date
     comment: String
+    isActive: Boolean!
+}
+
+type PartyRelationshipType {
+    id: ID!
+    name: String!
+    description: String
+    fromRoleType: String!
+    toRoleType: String!
+    parentType: PartyRelationshipType
 }
 
 # Input types for mutations
@@ -201,13 +211,14 @@ input AddPostalAddressInput {
 input CreatePartyRelationshipInput {
     fromPartyId: ID!
     toPartyId: ID!
-    relationshipType: String!
+    relationshipTypeId: ID!
     fromDate: Date!
+    thruDate: Date
     comment: String
 }
 
 input UpdatePartyRelationshipInput {
-    relationshipType: String
+    thruDate: Date
     comment: String
 }
 
@@ -224,6 +235,11 @@ type Query {
 
     # Party relationship queries
     partyRelationships(partyId: ID!, page: Int = 0, size: Int = 20): [PartyRelationship!]!
+    partyRelationship(id: ID!): PartyRelationship
+
+    # Party relationship type queries
+    partyRelationshipTypes: [PartyRelationshipType!]!
+    partyRelationshipType(id: ID!): PartyRelationshipType
 }
 
 # Root Mutation type

@@ -13,12 +13,12 @@ spring:
   config:
     import: "optional:configserver:"
 
-  # Test database configuration - uses PostgreSQL via Testcontainers
+  # Test database configuration - uses external PostgreSQL
   datasource:
-    url: jdbc:tc:postgresql:15-alpine:///testdb
-    username: test
-    password: test  # pragma: allowlist secret
-    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    url: jdbc:postgresql://localhost:5432/people_and_organizations
+    username: postgres
+    password: postgres  # pragma: allowlist secret
+    driver-class-name: org.postgresql.Driver
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect

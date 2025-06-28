@@ -2,19 +2,14 @@ package org.erp_microservices.peopleandorganizations.api.integration;
 
 import org.erp_microservices.peopleandorganizations.api.domain.repository.PartyRepository;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.graphql.tester.AutoConfigureHttpGraphQlTester;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.graphql.test.tester.HttpGraphQlTester;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.LocalDate;
 
@@ -23,28 +18,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
     properties = {
         "spring.cloud.vault.enabled=false",
-        "spring.cloud.config.enabled=false"
+        "spring.cloud.config.enabled=false",
+        "spring.profiles.active=test",
+        "spring.graphql.graphiql.enabled=false"
     })
 @AutoConfigureHttpGraphQlTester
-@Testcontainers
 @Transactional
 @Tag("integration")
-@Disabled("Disabled until GraphQL resolvers are implemented - see issue #8")
+@WithMockUser
 public class GraphQLPartyIntegrationTest {
-
-    @Container
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15-alpine")
-            .withDatabaseName("testdb")
-            .withUsername("test")
-            .withPassword("test");
-
-    @DynamicPropertySource
-    static void properties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-        registry.add("spring.datasource.username", postgres::getUsername);
-        registry.add("spring.datasource.password", postgres::getPassword);
-        registry.add("spring.jpa.hibernate.ddl-auto", () -> "create-drop");
-    }
 
     @Autowired
     private HttpGraphQlTester graphQlTester;
@@ -119,7 +101,7 @@ public class GraphQLPartyIntegrationTest {
     void getPersonById_ShouldReturnPerson() {
         // First create a person through repository to get ID
         // This simulates existing data
-        String personId = "test-person-id"; // Will be replaced with actual ID after creation
+        String personId = "550e8400-e29b-41d4-a716-446655440000"; // Valid UUID for non-existent person
 
         String query = """
             query GetPerson($id: ID!) {
@@ -138,7 +120,7 @@ public class GraphQLPartyIntegrationTest {
                 .document(query)
                 .variable("id", personId)
                 .execute()
-                .path("person").pathDoesNotExist(); // Expecting null for non-existent ID
+                .path("person").valueIsNull(); // Expecting null for non-existent ID
     }
 
     @Test
