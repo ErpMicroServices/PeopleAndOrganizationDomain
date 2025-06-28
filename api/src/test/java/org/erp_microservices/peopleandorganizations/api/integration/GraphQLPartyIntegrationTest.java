@@ -2,7 +2,6 @@ package org.erp_microservices.peopleandorganizations.api.integration;
 
 import org.erp_microservices.peopleandorganizations.api.domain.repository.PartyRepository;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 @Tag("integration")
 @WithMockUser
-@Disabled("Temporarily disabled due to WebTestClient configuration issues")
 public class GraphQLPartyIntegrationTest {
 
     @Autowired
@@ -103,7 +101,7 @@ public class GraphQLPartyIntegrationTest {
     void getPersonById_ShouldReturnPerson() {
         // First create a person through repository to get ID
         // This simulates existing data
-        String personId = "test-person-id"; // Will be replaced with actual ID after creation
+        String personId = "550e8400-e29b-41d4-a716-446655440000"; // Valid UUID for non-existent person
 
         String query = """
             query GetPerson($id: ID!) {
