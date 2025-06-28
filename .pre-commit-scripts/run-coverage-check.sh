@@ -2,20 +2,46 @@
 set -e
 
 # Test coverage validation script for pre-push hook
-# Ensures code coverage meets minimum requirements
+# Ensures code coverage meets minimum requirements with proper Docker environment
 
 echo "📊 Preparing test coverage validation..."
 
 # Get the directory where this script is located
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." && pwd )"
 
 # Source the Java 21 detection script
 source "$SCRIPT_DIR/detect-java-21.sh"
 
 # Set JAVA_HOME to the detected Java 21
 export JAVA_HOME="$JAVA21_HOME"
+echo "✅ Using Java 21 from: $JAVA_HOME"
 echo "📊 Validating test coverage..."
 echo "📋 Minimum required coverage: 80%"
+
+# Check if Docker is running (required for database-dependent tests)
+if ! docker info >/dev/null 2>&1; then
+  echo "❌ ERROR: Docker is not running!"
+  echo "Coverage validation requires Docker for database connectivity."
+  echo ""
+  echo "Please start Docker and try again."
+  echo "🚫 To bypass this check temporarily: git push --no-verify"
+  exit 1
+fi
+
+echo "🐳 Starting test dependencies..."
+cd "$PROJECT_ROOT"
+
+# Start test dependencies using Docker Compose
+docker-compose -f docker-compose.test.yml up -d --wait
+
+# Wait for PostgreSQL to be ready
+echo "⏳ Waiting for PostgreSQL to be ready..."
+until docker-compose -f docker-compose.test.yml exec -T postgres pg_isready -U test_user -d test_db >/dev/null 2>&1; do
+  echo "  Waiting for PostgreSQL..."
+  sleep 2
+done
+echo "✅ PostgreSQL is ready!"
 echo ""
 
 # Function to extract coverage percentage from XML report
@@ -49,9 +75,11 @@ else
   echo "💡 Tips:"
   echo "  - Check test output in /tmp/coverage-test.log"
   echo "  - Fix failing tests before pushing"
-  echo "  - Run './gradlew :api:test' locally to debug"
+  echo "  - Run './scripts/run-tests.sh' locally to debug"
   echo ""
   echo "🚫 To bypass this check temporarily: git push --no-verify"
+  # Clean up test dependencies even on failure
+  docker-compose -f docker-compose.test.yml down --volumes
   exit 1
 fi
 
@@ -78,6 +106,9 @@ if ./gradlew :api:jacocoTestCoverageVerification --no-daemon > /tmp/coverage-ver
   echo ""
   echo "💡 View detailed coverage report:"
   echo "   open api/build/reports/jacoco/test/html/index.html"
+  # Clean up test dependencies
+  echo "🧹 Cleaning up test dependencies..."
+  docker-compose -f docker-compose.test.yml down --volumes
 else
   echo "❌ ERROR: Coverage validation FAILED - below 80% threshold!"
   echo ""
@@ -93,5 +124,7 @@ else
   echo "📁 Detailed verification log: /tmp/coverage-verify.log"
   echo ""
   echo "🚫 To bypass this check temporarily: git push --no-verify"
+  # Clean up test dependencies even on failure
+  docker-compose -f docker-compose.test.yml down --volumes
   exit 1
 fi
