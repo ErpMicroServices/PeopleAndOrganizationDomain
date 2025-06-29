@@ -24,6 +24,15 @@ spring:
           time_zone: UTC
     open-in-view: false
 
+  flyway:
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    baseline-version: "0"
+    validate-on-migrate: true
+    clean-disabled: true
+    schemas: public
+    enabled: true
+
   graphql:
     graphiql:
       enabled: true

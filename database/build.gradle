@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'org.flywaydb.flyway' version '10.10.0'
 }
 
 group = 'org.erp_microservices.peopleandorganizations'
@@ -10,10 +11,39 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.flywaydb:flyway-core:10.10.0'
+    implementation 'org.flywaydb:flyway-database-postgresql:10.10.0'
+    implementation 'org.postgresql:postgresql:42.7.4'
+
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.testcontainers:testcontainers:1.19.3'
+    testImplementation 'org.testcontainers:postgresql:1.19.3'
+    testImplementation 'org.testcontainers:junit-jupiter:1.19.3'
+    testImplementation 'org.mockito:mockito-core:5.7.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.7.0'
 }
 
 test {
     useJUnitPlatform()
+}
+
+// Flyway configuration
+flyway {
+    url = project.findProperty('flyway.url') ?: 'jdbc:postgresql://localhost:5432/people_and_organizations'
+    user = project.findProperty('flyway.user') ?: 'postgres'
+    password = project.findProperty('flyway.password') ?: 'postgres'
+    schemas = ['public']
+    locations = ['classpath:db/migration']
+    baselineOnMigrate = true
+    baselineVersion = '0'
+    validateOnMigrate = true
+    cleanDisabled = true
+
+    // Production safety
+    if (project.hasProperty('flyway.environment') && project.property('flyway.environment') == 'production') {
+        cleanDisabled = true
+        validateOnMigrate = true
+        outOfOrder = false
+    }
 }
