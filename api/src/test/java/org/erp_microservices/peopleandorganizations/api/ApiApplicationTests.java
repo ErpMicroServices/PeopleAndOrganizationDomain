@@ -6,7 +6,10 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
 @Import(TestcontainersConfiguration.class)
-@SpringBootTest
+@SpringBootTest(properties = {
+    "spring.security.oauth2.resourceserver.jwt.issuer-uri=",
+    "security.disabled=true"
+})
 @ActiveProfiles("test")
 class ApiApplicationTests {
 

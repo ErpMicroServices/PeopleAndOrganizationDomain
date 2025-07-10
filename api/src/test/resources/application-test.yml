@@ -41,9 +41,12 @@ spring:
       enabled: false
     path: /graphql
 
-  # Disable security for tests
+  # Security configuration for tests
   security:
     oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://test.issuer.com
       client:
         registration:
           cognito:

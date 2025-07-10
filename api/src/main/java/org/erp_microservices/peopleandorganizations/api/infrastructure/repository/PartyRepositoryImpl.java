@@ -118,4 +118,18 @@ public class PartyRepositoryImpl implements PartyRepository {
     public Page<Party> findByPartyType(String partyType, Pageable pageable) {
         return jpaRepository.findByPartyType(partyType, pageable);
     }
+
+    @Override
+    public Optional<Party> findByUsername(String username) {
+        // Implementation would search for a party with a matching username
+        // This is a placeholder - in a real system, you'd have a separate authentication table
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Party> findByEmail(String email) {
+        // Implementation would search contact mechanisms for matching email
+        // This is a placeholder - would need to join with contact mechanism tables
+        return Optional.empty();
+    }
 }

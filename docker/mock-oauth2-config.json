@@ -1,0 +1,25 @@
+{
+  "interactiveLogin": true,
+  "httpServer": {
+    "type": "NettyWrapper"
+  },
+  "tokenCallbacks": [
+    {
+      "issuerId": "default",
+      "tokenExpiry": 3600,
+      "requestMappings": [
+        {
+          "requestParam": "scope",
+          "match": "*",
+          "claims": {
+            "sub": "test-user",
+            "aud": ["people-org-api"],
+            "roles": ["USER"],
+            "email": "test@example.com",
+            "email_verified": true
+          }
+        }
+      ]
+    }
+  ]
+}
