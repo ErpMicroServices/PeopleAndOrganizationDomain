@@ -45,4 +45,8 @@ public interface PartyRepository {
     List<Party> saveAll(Iterable<Party> parties);
 
     Page<Party> findByPartyType(String partyType, Pageable pageable);
+
+    Optional<Party> findByUsername(String username);
+
+    Optional<Party> findByEmail(String email);
 }

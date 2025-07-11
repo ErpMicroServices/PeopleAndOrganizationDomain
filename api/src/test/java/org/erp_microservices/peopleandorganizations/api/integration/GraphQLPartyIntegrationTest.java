@@ -15,18 +15,8 @@ import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-    properties = {
-        "spring.cloud.vault.enabled=false",
-        "spring.cloud.config.enabled=false",
-        "spring.profiles.active=test",
-        "spring.graphql.graphiql.enabled=false"
-    })
-@AutoConfigureHttpGraphQlTester
-@Transactional
-@Tag("integration")
 @WithMockUser
-public class GraphQLPartyIntegrationTest {
+public class GraphQLPartyIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     private HttpGraphQlTester graphQlTester;
