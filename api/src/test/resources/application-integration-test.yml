@@ -1,0 +1,16 @@
+spring:
+  # Security configuration for integration tests
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://test.issuer.com
+          # Mock JWT decoder will be used instead of connecting to issuer
+
+# Disable security for certain test scenarios
+security:
+  disabled: false
+
+# Test-specific allowed origins
+allowed:
+  origins: http://localhost:3000,http://localhost:8080

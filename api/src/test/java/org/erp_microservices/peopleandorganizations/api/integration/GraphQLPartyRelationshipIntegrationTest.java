@@ -14,17 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-    properties = {
-        "spring.cloud.vault.enabled=false",
-        "spring.cloud.config.enabled=false",
-        "spring.profiles.active=test"
-    })
-@AutoConfigureHttpGraphQlTester
-@Transactional
-@Tag("integration")
 @WithMockUser
-public class GraphQLPartyRelationshipIntegrationTest {
+public class GraphQLPartyRelationshipIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     private HttpGraphQlTester graphQlTester;
